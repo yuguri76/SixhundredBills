@@ -9,15 +9,20 @@
 
 제목 : (위 키워드 중 맞는 것) / + #(issue 번호) + 기능명  
 
-<p style="color: blue; font-size: 20px;">
-## :렌즈가_오른쪽_위에_있는_확대경: 작업 내용(주석달아서 적어주세요)
+<p style="color: blue; font-size: 20px; font-weight: bold;">
+  ## 🔍 작업 내용 (주석 달아서 적어주세요)
 </p>
 
 <br/>
-## :두꺼운_더하기_기호: 기타 수정 사항
-</br>
+
+<p style="color: blue; font-size: 20px; font-weight: bold;">
+  ## ➕ 기타 수정 사항
+</p>
 
 <br/>
-## :렌치: 이 다음 구현할 기능
+
+<p style="color: blue; font-size: 20px; font-weight: bold;">
+  ## 🔧 이 다음 구현할 기능
+</p>
 - (간단하게 적어주세요)
-</br>
+<br/>
