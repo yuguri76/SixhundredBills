@@ -11,14 +11,33 @@
 
 
 
-**## 🔍 작업 내용 (주석 달아서 적어주세요)**
+<details>
+<summary><span style="color: blue; font-size: 20px; font-weight: bold;">🔍 작업 내용 (주석 달아서 적어주세요)</span></summary>
+<p>
+
+여기에 작업 내용을 작성하세요.
+
+</p>
+</details>
 
 <br/>
 
-**## ➕ 기타 수정 사항**
+<details>
+<summary><span style="color: blue; font-size: 20px; font-weight: bold;">➕ 기타 수정 사항</span></summary>
+<p>
+
+여기에 기타 수정 사항을 작성하세요.
+
+</p>
+</details>
 
 <br/>
 
-**## 🔧 이 다음 구현할 기능**
-- (간단하게 적어주세요)
+<details>
+<summary><span style="color: blue; font-size: 20px; font-weight: bold;">🔧 이 다음 구현할 기능</span></summary>
+<p>
+- 간단하게 적어주세요.
+</p>
+</details>
+
 <br/>
