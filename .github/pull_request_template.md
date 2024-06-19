@@ -11,23 +11,14 @@
 
 
 
-<p style="color: blue; font-size: 20px; font-weight: bold;">
-  ## 🔍 작업 내용 (주석 달아서 적어주세요)
-</p>
+**## 🔍 작업 내용 (주석 달아서 적어주세요)**
 
 <br/>
-</br>
 
-<p style="color: blue; font-size: 20px; font-weight: bold;">
-  ## ➕ 기타 수정 사항
-</p>
+**## ➕ 기타 수정 사항**
 
 <br/>
-</br>
 
-<p style="color: blue; font-size: 20px; font-weight: bold;">
-  ## 🔧 이 다음 구현할 기능
-</p>
+**## 🔧 이 다음 구현할 기능**
 - (간단하게 적어주세요)
 <br/>
-</br>
