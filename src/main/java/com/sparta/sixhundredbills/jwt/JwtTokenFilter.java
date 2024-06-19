@@ -20,7 +20,6 @@ import java.io.IOException;
 public class JwtTokenFilter extends OncePerRequestFilter {
 
 
-
     private final JwtTokenProvider jwtTokenProvider; // jwtTokenProvider는 jwt 토큰을 생성 및 유효성을 검사하는 도구
 
     // JwtTokenProvider를 주입받아 초기화하는 생성자
@@ -69,3 +68,4 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         }
         return null;
     }
+}
