@@ -18,19 +18,17 @@ public abstract class TimeStamp {
 
     @CreatedDate
     @Column(updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime modifiedAt;
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public void setModifiedAt(LocalDateTime modifiedAt) {
+    public void setUpdatedAt(LocalDateTime modifiedAt) {
         this.modifiedAt = modifiedAt;
     }
 }
