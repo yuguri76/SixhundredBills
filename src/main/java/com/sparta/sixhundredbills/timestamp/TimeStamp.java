@@ -1,4 +1,4 @@
-package com.sparta.sixhundredbills;
+package com.sparta.sixhundredbills.timestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
