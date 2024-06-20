@@ -32,7 +32,6 @@ dependencies {
     // JSON 라이브러리: JSON 데이터를 처리하기 위한 라이브러리
     implementation 'org.json:json:20230227'
 
-    implementation 'io.jsonwebtoken:jjwt:0.9.1'
 
 
     implementation 'mysql:mysql-connector-java'
@@ -60,6 +59,7 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
 
     // Spring Boot Test Starter
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
