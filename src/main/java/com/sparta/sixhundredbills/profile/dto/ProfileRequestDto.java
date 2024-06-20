@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ProfileRequestDto {
-
+public class ProfileRequestDto {  // 요청
+    private String password;
+    private String newPassword;
 }
