@@ -3,10 +3,13 @@ package com.sparta.sixhundredbills.auth.dto;
 
 import lombok.Data;
 
-import javax.management.relation.Role;
+
+
+import com.sparta.sixhundredbills.auth.entity.Role;
 
 // 클라이언트에서 전송되는 사용자 정보를 담는 DTO 클래스
 @Data
+
 public class UserDto {
 
     private String username; // 사용자의 이름을 저장하는 필드
