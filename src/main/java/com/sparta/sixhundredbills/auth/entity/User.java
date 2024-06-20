@@ -55,9 +55,6 @@ public class User extends TimeStamp {
     @Column(name = "USER_STATUS_TIME", nullable = false) // 데이터베이스 컬럼 설정
     private LocalDateTime userStatusTime; // 사용자 상태 변경 일시
 
-    // 사용자의 상태를 반환하는 메서드 => 필드 값 반환.
-    public UserStatusEnum getUserStatus() {
-        return userStatus;
     // 회원가입 요청 정보로부터 사용자 생성하는 생성자
     public User(SignupRequestDto signupRequestDto) {
         this.username = signupRequestDto.getUsername();
@@ -72,6 +69,7 @@ public class User extends TimeStamp {
     public User(String username, String password, String name, String email, String intro, UserStatusEnum userStatusEnum) {
         this.username = username;
         this.password = password;
+        this.name = name;
         this.email = email;
         this.intro = intro;
         this.userStatus = UserStatusEnum.USER_NORMAL; // 기본으로 정상 사용자 상태 설정
