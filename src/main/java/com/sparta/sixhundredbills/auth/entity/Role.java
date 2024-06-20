@@ -7,5 +7,12 @@ package com.sparta.sixhundredbills.auth.entity;
 
 public enum Role {
     USER, // 일반 사용자 역할을 나타내는 상수
-    ADMIN // 관리자 역할을 나타내는 상수
+    ADMIN; // 관리자 역할을 나타내는 상수
+
+
+    // Spring Security에서 권한을 부여할 때
+    // 규약에 맞게 'ROLE_USER', 'ROLE_ADMIN'과 같은 형태로 역할을 반환.
+    public String getRoleName() {
+        return "ROLE_" + this.name();
+    }
 }
