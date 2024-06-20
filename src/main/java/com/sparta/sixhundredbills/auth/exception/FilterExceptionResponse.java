@@ -1,4 +1,4 @@
-package com.sparta.sixhundredbills.auth.jwt;
+package com.sparta.sixhundredbills.auth.exception;
 
 /**
  * 필터 예외 응답 클래스.
