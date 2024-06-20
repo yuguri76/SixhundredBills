@@ -1,71 +1,63 @@
 package com.sparta.sixhundredbills.auth.service;
 
-import com.sparta.sixhundredbills.auth.entity.Role;
+import com.sparta.sixhundredbills.auth.dto.SignupRequestDto;
+import com.sparta.sixhundredbills.auth.dto.SignupResponseDto;
 import com.sparta.sixhundredbills.auth.entity.User;
+import com.sparta.sixhundredbills.auth.entity.UserStatusEnum;
+import com.sparta.sixhundredbills.auth.exception.CustomException;
 import com.sparta.sixhundredbills.auth.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-// 사용자 서비스
+import java.util.Optional;
 
-// 사용자 등록 및 로그인 로직 처리 & DB 상호작용 => 사용자 관리 기능의 클래스
-// @Service 애노테이션을 통해 이 클래스는 Spring의 서비스로 등록 및 IoC 컨테이너에 의해 관리.
+import static com.sparta.sixhundredbills.auth.exception.ErrorEnum.BAD_DUPLICATE;
 
+// 회원 가입 로직을 담당하는 클래스.
 
-
-// 수정 사항 :
-// 잘못된 'signupUser' 메서드 제거, 올바른 메서드 구현 및 사용
-
-
-@Service // 서비스로 등록하여 관리
+@Service
+@RequiredArgsConstructor
 public class UserService {
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+    // 회원 가입 로직을 처리하는 메서드
+    public SignupResponseDto signup(SignupRequestDto requestDto) {
+        // 요청에서 필요한 데이터 추출
+        String username = requestDto.getUsername(); // 사용자명
+        String password = passwordEncoder.encode(requestDto.getPassword()); // 비밀번호를 암호화하여 저장
+        String name = requestDto.getName(); // 사용자 이름
+        String intro = requestDto.getIntro(); // 사용자 소개
+        UserStatusEnum userStatusEnum = UserStatusEnum.USER_NORMAL; // 사용자 상태 초기화
 
-
-    // 사용자 등록 메서드
-    public void signupUser(String username, String password, Role role) {
-
-        // 이미 존재하는 username인지 확인
-        if (userRepository.findByUsername(username).isPresent()) {
-            // 이미 존재할 시 예외 처리
-            throw new RuntimeException("사용자가 이미 존재합니다.");
+        // 회원 중복 확인
+        Optional<User> checkUsername = userRepository.findByUsername(username);
+        if (checkUsername.isPresent()) {
+            throw new CustomException(BAD_DUPLICATE); // 이미 존재하는 사용자명일 경우 예외 처리
         }
 
-        // 비밀번호 암호화
-        String encodedPassword = passwordEncoder.encode(password);
+        String email = requestDto.getEmail(); // 사용자 이메일
 
-        // 사용자 엔티티 생성 및 설정
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(encodedPassword);
-        user.setRole(role);
+        // 새로운 사용자 등록
+        User user = new User(username, password, name, email, intro, userStatusEnum); // 새 사용자 객체 생성
+        userRepository.save(user); // 사용자 정보 저장
 
-        // 사용자 저장 후 반환
-        userRepository.save(user);
-    }
-
-    // 사용자 로그인 메서드
-    public User loginUser(String username, String password) {
-        // username으로 사용자 조회
-        User user = userRepository.findByUsername(username)
-                // 사용자가 존재하지 않을 시 예외 처리
-                .orElseThrow(() -> new RuntimeException("사용자 이름이 존재하지 않습니다."));
-
-        // 비밀번호 일치 여부 확인
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            // 비밀번호 일치하지 않을 시 예외 처리
-            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
-        }
-
-        // 사용자 반환
-        return user;
+        return new SignupResponseDto(user); // 회원 가입 성공을 나타내는 응답 DTO 생성하여 반환
     }
 }
+
+// 회원탈퇴 메서드 ( 필수 구현 조건에 없어서 주석처리 )
+//    @Transactional
+//    public void resign(User user, ResignDto resignDto) {
+//        User userRep = userRepository.findByUsername(user.getUsername()).orElseThrow();
+//        if (!passwordEncoder.matches(resignDto.getPassword(), userRep.getPassword())) {
+//            throw new CustomException(BAD_PASSWORD);
+//        }
+//        if (userRep.getUserStatus().equals(UserStatusEnum.USER_RESIGN)) {
+//            throw new CustomException(BAD_RESIGN);
+//        }
+//
+//        userRep.resignStatus();
+//    }
