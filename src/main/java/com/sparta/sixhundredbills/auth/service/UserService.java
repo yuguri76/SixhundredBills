@@ -14,6 +14,10 @@ import org.springframework.stereotype.Service;
 
 
 
+// 수정 사항 :
+// 잘못된 'signupUser' 메서드 제거, 올바른 메서드 구현 및 사용
+
+
 @Service // 서비스로 등록하여 관리
 public class UserService {
     private final UserRepository userRepository;
@@ -27,7 +31,7 @@ public class UserService {
 
 
     // 사용자 등록 메서드
-    public User signupUser(String username, String password, Role role) {
+    public void signupUser(String username, String password, Role role) {
 
         // 이미 존재하는 username인지 확인
         if (userRepository.findByUsername(username).isPresent()) {
@@ -45,7 +49,7 @@ public class UserService {
         user.setRole(role);
 
         // 사용자 저장 후 반환
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     // 사용자 로그인 메서드
