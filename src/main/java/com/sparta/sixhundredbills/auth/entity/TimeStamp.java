@@ -1,4 +1,4 @@
-package com.sparta.sixhundredbills;
+package com.sparta.sixhundredbills.auth.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
