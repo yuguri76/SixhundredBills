@@ -1,4 +1,4 @@
-package com.sparta.sixhundredbills.entity;
+package com.sparta.sixhundredbills.auth.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

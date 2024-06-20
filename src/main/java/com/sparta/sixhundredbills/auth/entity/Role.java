@@ -1,4 +1,4 @@
-package com.sparta.sixhundredbills.entity;
+package com.sparta.sixhundredbills.auth.entity;
 
 
 // 사용자 역할을 정의하는 열거형(enum)

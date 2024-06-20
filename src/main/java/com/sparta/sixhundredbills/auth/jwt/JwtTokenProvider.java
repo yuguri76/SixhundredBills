@@ -1,4 +1,4 @@
-package com.sparta.sixhundredbills.jwt;
+package com.sparta.sixhundredbills.auth.jwt;
 
 
 import io.jsonwebtoken.Claims;

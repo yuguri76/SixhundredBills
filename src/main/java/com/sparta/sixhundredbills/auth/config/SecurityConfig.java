@@ -1,12 +1,12 @@
-package com.sparta.sixhundredbills.config;
+package com.sparta.sixhundredbills.auth.config;
 
-import com.sparta.sixhundredbills.jwt.JwtAuthenticationEntryPoint;
-import com.sparta.sixhundredbills.jwt.JwtAuthenticationFilter;
-import com.sparta.sixhundredbills.jwt.JwtTokenFilter;
-import com.sparta.sixhundredbills.jwt.JwtTokenProvider;
-import com.sparta.sixhundredbills.repository.UserRepository;
-import com.sparta.sixhundredbills.security.UserDetailsServiceImpl;
-import com.sparta.sixhundredbills.service.AuthService;
+import com.sparta.sixhundredbills.auth.jwt.JwtAuthenticationEntryPoint;
+import com.sparta.sixhundredbills.auth.jwt.JwtAuthenticationFilter;
+import com.sparta.sixhundredbills.auth.jwt.JwtTokenProvider;
+import com.sparta.sixhundredbills.auth.security.UserDetailsServiceImpl;
+import com.sparta.sixhundredbills.auth.service.AuthService;
+import com.sparta.sixhundredbills.auth.jwt.JwtTokenFilter;
+import com.sparta.sixhundredbills.auth.repository.UserRepository;
 import jakarta.servlet.Filter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

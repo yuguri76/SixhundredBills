@@ -1,8 +1,8 @@
-package com.sparta.sixhundredbills.service;
+package com.sparta.sixhundredbills.auth.service;
 
-import com.sparta.sixhundredbills.entity.Role;
-import com.sparta.sixhundredbills.entity.User;
-import com.sparta.sixhundredbills.repository.UserRepository;
+import com.sparta.sixhundredbills.auth.entity.Role;
+import com.sparta.sixhundredbills.auth.entity.User;
+import com.sparta.sixhundredbills.auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
