@@ -2,7 +2,7 @@ package com.sparta.sixhundredbills.auth.controller;
 
 import com.sparta.sixhundredbills.auth.dto.SignupRequestDto;
 import com.sparta.sixhundredbills.auth.dto.SignupResponseDto;
-import com.sparta.sixhundredbills.auth.exception.CommonResponse;
+import com.sparta.sixhundredbills.exception.CommonResponse;
 import com.sparta.sixhundredbills.auth.service.AuthService;
 import com.sparta.sixhundredbills.auth.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;

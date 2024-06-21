@@ -3,7 +3,7 @@ package com.sparta.sixhundredbills.auth.service;
 import com.sparta.sixhundredbills.auth.dto.LoginRequestDto;
 import com.sparta.sixhundredbills.auth.entity.User;
 import com.sparta.sixhundredbills.auth.entity.UserStatusEnum;
-import com.sparta.sixhundredbills.auth.exception.ErrorEnum;
+import com.sparta.sixhundredbills.exception.ErrorEnum;
 import com.sparta.sixhundredbills.auth.jwt.JwtUtil;
 import com.sparta.sixhundredbills.auth.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;

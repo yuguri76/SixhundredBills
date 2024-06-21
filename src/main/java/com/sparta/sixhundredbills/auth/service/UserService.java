@@ -4,7 +4,7 @@ import com.sparta.sixhundredbills.auth.dto.SignupRequestDto;
 import com.sparta.sixhundredbills.auth.dto.SignupResponseDto;
 import com.sparta.sixhundredbills.auth.entity.User;
 import com.sparta.sixhundredbills.auth.entity.UserStatusEnum;
-import com.sparta.sixhundredbills.auth.exception.CustomException;
+import com.sparta.sixhundredbills.exception.CustomException;
 import com.sparta.sixhundredbills.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static com.sparta.sixhundredbills.auth.exception.ErrorEnum.BAD_DUPLICATE;
+import static com.sparta.sixhundredbills.exception.ErrorEnum.BAD_DUPLICATE;
 
 // 회원 가입 로직을 담당하는 클래스.
 

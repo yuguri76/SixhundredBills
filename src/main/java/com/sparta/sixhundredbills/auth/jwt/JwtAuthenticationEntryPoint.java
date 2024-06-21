@@ -1,8 +1,8 @@
 package com.sparta.sixhundredbills.auth.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.sixhundredbills.auth.exception.ErrorEnum;
-import com.sparta.sixhundredbills.auth.exception.FilterExceptionResponse;
+import com.sparta.sixhundredbills.exception.ErrorEnum;
+import com.sparta.sixhundredbills.exception.FilterExceptionResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

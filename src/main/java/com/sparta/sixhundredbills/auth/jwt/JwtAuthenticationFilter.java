@@ -1,7 +1,7 @@
 package com.sparta.sixhundredbills.auth.jwt;
 
 import com.sparta.sixhundredbills.auth.dto.LoginRequestDto;
-import com.sparta.sixhundredbills.auth.exception.ErrorEnum;
+import com.sparta.sixhundredbills.exception.ErrorEnum;
 import com.sparta.sixhundredbills.auth.service.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;

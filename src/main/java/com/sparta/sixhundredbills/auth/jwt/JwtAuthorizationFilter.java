@@ -1,6 +1,6 @@
 package com.sparta.sixhundredbills.auth.jwt;
 
-import com.sparta.sixhundredbills.auth.exception.ErrorEnum;
+import com.sparta.sixhundredbills.exception.ErrorEnum;
 import com.sparta.sixhundredbills.auth.security.UserDetailsServiceImpl;
 import com.sparta.sixhundredbills.auth.service.AuthService;
 import io.jsonwebtoken.Claims;
