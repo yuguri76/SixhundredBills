@@ -44,4 +44,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(400).body("해당 게시물은 존재하지 않습니다.");
     }
 
+    /**
+     * InvalidEnteredException : 잘못된 입력값이 들어왔을 때
+     * @param message
+     * @return : 400 에러와 오류 메시지 반환
+     * */
+    @ExceptionHandler(InvalidEnteredException.class)
+    public ResponseEntity<String> invalidEnteredException(String message) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+    }
+
 }
