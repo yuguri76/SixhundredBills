@@ -47,17 +47,3 @@ public class UserService {
         return new SignupResponseDto(user); // 회원 가입 성공을 나타내는 응답 DTO 생성하여 반환
     }
 }
-
-// 회원탈퇴 메서드 ( 필수 구현 조건에 없어서 주석처리 )
-//    @Transactional
-//    public void resign(User user, ResignDto resignDto) {
-//        User userRep = userRepository.findByUsername(user.getUsername()).orElseThrow();
-//        if (!passwordEncoder.matches(resignDto.getPassword(), userRep.getPassword())) {
-//            throw new CustomException(BAD_PASSWORD);
-//        }
-//        if (userRep.getUserStatus().equals(UserStatusEnum.USER_RESIGN)) {
-//            throw new CustomException(BAD_RESIGN);
-//        }
-//
-//        userRep.resignStatus();
-//    }
