@@ -3,6 +3,7 @@ package com.sparta.sixhundredbills.auth.config;
 import com.sparta.sixhundredbills.auth.jwt.*;
 import com.sparta.sixhundredbills.auth.security.UserDetailsServiceImpl;
 import com.sparta.sixhundredbills.auth.service.AuthService;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,23 +25,23 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
-    private final AuthService authService;
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final ObjectProvider<AuthService> authServiceProvider;
 
     /**
      * 생성자를 통해 필요한 의존성을 주입 받음.
      *
-     * @param authService                 인증 서비스
      * @param userDetailsService          사용자 세부 정보 서비스
      * @param jwtUtil                     JWT 유틸리티 클래스
      * @param authenticationConfiguration 인증 구성
+     * @param authServiceProvider         인증 서비스 제공자
      */
-    public SecurityConfig(AuthService authService, UserDetailsServiceImpl userDetailsService, JwtUtil jwtUtil, AuthenticationConfiguration authenticationConfiguration) {
-        this.authService = authService;
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService, JwtUtil jwtUtil, AuthenticationConfiguration authenticationConfiguration, ObjectProvider<AuthService> authServiceProvider) {
         this.userDetailsService = userDetailsService;
         this.jwtUtil = jwtUtil;
         this.authenticationConfiguration = authenticationConfiguration;
+        this.authServiceProvider = authServiceProvider;
     }
 
 
@@ -70,8 +71,8 @@ public class SecurityConfig {
         );
 
         // JWT 인증 필터를 추가합니다.
-        http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class); // JWT 인증 필터를 UsernamePasswordAuthenticationFilter 앞에 추가.
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class); // JWT 인증 필터를 UsernamePasswordAuthenticationFilter 앞에 추가.
+        http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -104,7 +105,7 @@ public class SecurityConfig {
      */
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(authService);
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(authServiceProvider.getObject());
         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
         return filter;
     }
@@ -128,27 +129,8 @@ public class SecurityConfig {
      */
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter(jwtUtil, userDetailsService, authService);
+        return new JwtAuthorizationFilter(jwtUtil, userDetailsService, authServiceProvider.getObject());
     }
 }
 
-//    // JWT 토큰 제공자 빈 설정, JWT 토큰 관련 기능을 제공
-//    @Bean
-//    public JwtTokenProvider jwtTokenProvider() {
-//        return new JwtTokenProvider();
-//    }
-//
-//    // JWT 토큰 필터 빈 설정, JWT 토큰의 유효성 검사 및 사용자 인증을 수행
-//    @Bean
-//    public JwtTokenFilter jwtTokenFilter() {
-//        return new JwtTokenFilter(jwtTokenProvider, userDetailsService);
-//    }
-
-
-//    // UserDetailsServiceImpl 빈 설정, 사용자 세부 정보 서비를 설정.
-//    // UserRepository 를 주입받아 생성.
-//    @Bean
-//    public UserDetailsServiceImpl userDetailsServiceImpl(UserRepository userRepository) {
-//        return new UserDetailsServiceImpl(userRepository);
-//    }
 
