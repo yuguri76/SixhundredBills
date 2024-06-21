@@ -1,13 +1,13 @@
 package com.sparta.sixhundredbills.profile.service;
 
 import com.sparta.sixhundredbills.auth.entity.User;
+import com.sparta.sixhundredbills.auth.repository.UserRepository;
 import com.sparta.sixhundredbills.exception.InvalidEnteredException;
 import com.sparta.sixhundredbills.exception.UnauthorizedException;
 import com.sparta.sixhundredbills.profile.dto.ProfileRequestDto;
 import com.sparta.sixhundredbills.profile.dto.ProfileResponseDto;
 import com.sparta.sixhundredbills.profile.entity.PasswordList;
 import com.sparta.sixhundredbills.profile.repository.PasswordListRepository;
-import com.sparta.sixhundredbills.profile.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
