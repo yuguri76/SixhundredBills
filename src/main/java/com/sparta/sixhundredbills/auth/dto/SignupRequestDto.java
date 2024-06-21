@@ -46,10 +46,6 @@ public class SignupRequestDto {
     @NotBlank(message = "이름은 공백일 수 없습니다.")
     private String name;
 
-    /**
-     * 사용자 자기소개 (선택 사항)
-     */
-    private String intro;
 
     /**
      * 사용자 이메일

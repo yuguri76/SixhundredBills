@@ -29,7 +29,6 @@ public class UserService {
         String username = requestDto.getUsername(); // 사용자명
         String password = passwordEncoder.encode(requestDto.getPassword()); // 비밀번호를 암호화하여 저장
         String name = requestDto.getName(); // 사용자 이름
-        String intro = requestDto.getIntro(); // 사용자 소개
         UserStatusEnum userStatusEnum = UserStatusEnum.USER_NORMAL; // 사용자 상태 초기화
 
         // 회원 중복 확인
@@ -41,7 +40,7 @@ public class UserService {
         String email = requestDto.getEmail(); // 사용자 이메일
 
         // 새로운 사용자 등록
-        User user = new User(username, password, name, email, intro, userStatusEnum); // 새 사용자 객체 생성
+        User user = new User(username, password, name, email, userStatusEnum); // 새 사용자 객체 생성
         userRepository.save(user); // 사용자 정보 저장
 
         return new SignupResponseDto(user); // 회원 가입 성공을 나타내는 응답 DTO 생성하여 반환

@@ -39,9 +39,6 @@ public class User extends TimeStamp {
     @Column(name = "EMAIL", nullable = false, length = 35) // 데이터베이스 컬럼 설정
     private String email; // 이메일
 
-    @Column(name = "INTRO", length = 255) // 데이터베이스 컬럼 설정
-    private String intro; // 자기 소개
-
     @Setter // setter를 직접 설정
     @Column(nullable = false) // 데이터베이스 컬럼 설정
     @Enumerated(EnumType.STRING) // Enum 타입을 문자열로 저장
@@ -62,17 +59,15 @@ public class User extends TimeStamp {
         this.password = signupRequestDto.getPassword();
         this.name = signupRequestDto.getName();
         this.email = signupRequestDto.getEmail();
-        this.intro = signupRequestDto.getIntro();
         this.userStatus = UserStatusEnum.USER_NORMAL; // 회원가입 시 기본으로 정상 사용자 상태 설정
     }
 
     // 필드를 직접 받아서 사용자 생성하는 생성자
-    public User(String username, String password, String name, String email, String intro, UserStatusEnum userStatusEnum) {
+    public User(String username, String password, String name, String email, UserStatusEnum userStatusEnum) {
         this.username = username;
         this.password = password;
         this.name = name;
         this.email = email;
-        this.intro = intro;
         this.userStatus = UserStatusEnum.USER_NORMAL; // 기본으로 정상 사용자 상태 설정
     }
 
