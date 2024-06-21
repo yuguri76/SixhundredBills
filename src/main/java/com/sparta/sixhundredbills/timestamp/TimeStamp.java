@@ -1,8 +1,6 @@
 package com.sparta.sixhundredbills.timestamp;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
@@ -12,12 +10,13 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@Setter
 @Getter
 @MappedSuperclass // JPA 엔터티 클래스에서 공통 매핑 정보를 정의하기 위한 애노테이션
 @EntityListeners(AuditingEntityListener.class) // 엔터티의 변경 사항을 감지하고 Auditing 기능을 활성화하는 JPA 애노테이션
 public abstract class TimeStamp {
 
-    @Setter // 해당 필드에 대해 Setter 메서드를 자동 생성하는 Lombok 애노테이션
+
     @CreatedDate // 엔터티가 생성될 때 자동으로 생성일을 매핑하는 Spring Data JPA 애노테이션
     @Column(updatable = false) // 데이터베이스 열의 매핑 정보를 지정하는 JPA 애노테이션
     private LocalDateTime createdAt; // 생성 일시를 나타내는 필드
@@ -31,3 +30,5 @@ public abstract class TimeStamp {
         this.modifiedAt = modifiedAt;
     }
 }
+
+
