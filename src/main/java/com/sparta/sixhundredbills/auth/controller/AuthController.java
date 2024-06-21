@@ -58,18 +58,3 @@ public class AuthController {
                 .build());
     }
 }
-
-// 회원탈퇴는 필수 구현 조건에 없기에 임시 주석처리.
-//    @PutMapping("/resign")
-//    public ResponseEntity <CommonResponse<ResignDto>> resign(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody ResignDto resignDto){
-//
-//        userService.resign(userDetails.getUser(), resignDto);
-//        return ResponseEntity.ok().body(CommonResponse.<ResignDto>builder()
-//                .msg("회원탈퇴 성공")
-//                .statusCode(200)
-//                .build());
-//    }
-
-
-
-
