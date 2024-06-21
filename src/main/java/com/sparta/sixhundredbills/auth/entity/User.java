@@ -1,6 +1,7 @@
 package com.sparta.sixhundredbills.auth.entity;
 
 import com.sparta.sixhundredbills.auth.dto.SignupRequestDto;
+import com.sparta.sixhundredbills.timestamp.TimeStamp;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
