@@ -9,10 +9,10 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class ProfileResponseDto {  // 응답
-    private String username;
+    private String email;
     private String name;
 
     public ProfileResponseDto(User user) {
-        this.username = user.getUsername();
+        this.email = user.getEmail();
     }
 }

@@ -28,26 +28,26 @@ public class AuthService {
     public void login(LoginRequestDto loginRequestDto, HttpServletResponse response, HttpServletRequest request) {
 
         // 사용자명을 기반으로 사용자 정보를 데이터베이스에서 조회.
-        User user = userRepository.findByUsername(loginRequestDto.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid username or password"));
+        User user = userRepository.findByUsername(loginRequestDto.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
 
         // 입력된 비밀번호를 데이터베이스에 저장된 비밀번호와 비교하여 일치 여부를 확인.
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Invalid username or password");
+            throw new IllegalArgumentException("Invalid email or password");
         }
 
         // 사용자 상태가 USER_RESIGN인 경우 로그인을 허용 X.
         if (user.getUserStatus().equals(UserStatusEnum.USER_RESIGN)){
             request.setAttribute("test", ErrorEnum.BAD_RESIGN);
-            throw new IllegalArgumentException("Invalid username or password");
+            throw new IllegalArgumentException("Invalid email or password");
         }
 
         // Refresh Token 생성 및 쿠키에 저장
-        String refreshToken = jwtUtil.createRefreshToken(loginRequestDto.getUsername());
+        String refreshToken = jwtUtil.createRefreshToken(loginRequestDto.getEmail());
         jwtUtil.addRefreshJwtToCookie(refreshToken, response);
 
         // Access Token 생성 및 쿠키에 저장
-        String accessToken = jwtUtil.createAccessToken(loginRequestDto.getUsername());
+        String accessToken = jwtUtil.createAccessToken(loginRequestDto.getEmail());
         jwtUtil.addAccessJwtToCookie(accessToken, response);
 
         // 사용자 객체에 생성된 Refresh Token을 저장. 나중에 사용자가 Refresh Token을 사용하여 접근 토큰을 재발급받을 때 사용.
@@ -57,16 +57,16 @@ public class AuthService {
     // Access Token 재발급 처리 메서드
     public String tokenReissuance(String refreshToken, HttpServletResponse res) throws IOException {
         // Refresh Token으로부터 사용자명을 추출.
-        String username = String.valueOf(jwtUtil.getUserInfoFromToken(refreshToken).getSubject());
+        String email = String.valueOf(jwtUtil.getUserInfoFromToken(refreshToken).getSubject());
 
         // 데이터베이스에서 해당 사용자를 조회합니다. 사용자가 존재하지 않으면 예외를 발생.
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException());
+        User user = userRepository.findByUsername(email).orElseThrow(() -> new IllegalArgumentException());
 
         // 데이터베이스에 저장된 Refresh Token과 입력된 Refresh Token을 비교하여 일치 여부를 확인.
         String storedRefreshToken = jwtUtil.substringToken(user.getRefreshToken());
         if (storedRefreshToken.equals(refreshToken)) {
             // 새로운 Access Token을 생성합니다.
-            String newToken = jwtUtil.createAccessToken(username);
+            String newToken = jwtUtil.createAccessToken(email);
             // 생성된 Access Token을 HTTP 응답의 쿠키에 추가하여 클라이언트에게 반환.
             jwtUtil.addAccessJwtToCookie(newToken, res);
             return newToken; // 생성된 Access Token 반환
@@ -80,10 +80,10 @@ public class AuthService {
         String accessToken = jwtUtil.getAccessTokenFromRequest(request);
         accessToken = jwtUtil.substringToken(accessToken);
         // 추출된 Access Token을 이용하여 사용자명을 얻음.
-        String username = String.valueOf(jwtUtil.getUserInfoFromToken(accessToken).getSubject());
+        String email = String.valueOf(jwtUtil.getUserInfoFromToken(accessToken).getSubject());
 
         // 데이터베이스에서 해당 사용자를 조회합니다. 사용자가 존재하지 않으면 예외를 발생.
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByUsername(email)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
         // 사용자의 Refresh Token을 삭제하여 로그아웃 처리.

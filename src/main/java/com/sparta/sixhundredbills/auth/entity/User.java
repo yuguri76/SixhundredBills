@@ -27,8 +27,8 @@ public class User extends TimeStamp {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 생성되는 값, MySQL의 AUTO_INCREMENT와 같음
     private Long id;
 
-    @Column(name = "USERNAME", nullable = false, length = 20) // 데이터베이스 컬럼 설정
-    private String username; // 사용자명
+    @Column(name = "EMAIL", nullable = false, length = 35) // 데이터베이스 컬럼 설정
+    private String email; // 이메일 (사용자명)
 
     @Column(name = "PASSWORD", nullable = false, length = 60) // 데이터베이스 컬럼 설정
     private String password; // 비밀번호
@@ -36,8 +36,7 @@ public class User extends TimeStamp {
     @Column(name = "NAME", nullable = false, length = 40) // 데이터베이스 컬럼 설정
     private String name; // 이름
 
-    @Column(name = "EMAIL", nullable = false, length = 35) // 데이터베이스 컬럼 설정
-    private String email; // 이메일
+
 
     @Setter // setter를 직접 설정
     @Column(nullable = false) // 데이터베이스 컬럼 설정
@@ -55,19 +54,17 @@ public class User extends TimeStamp {
 
     // 회원가입 요청 정보로부터 사용자 생성하는 생성자
     public User(SignupRequestDto signupRequestDto) {
-        this.username = signupRequestDto.getUsername();
+        this.email = signupRequestDto.getEmail();
         this.password = signupRequestDto.getPassword();
         this.name = signupRequestDto.getName();
-        this.email = signupRequestDto.getEmail();
         this.userStatus = UserStatusEnum.USER_NORMAL; // 회원가입 시 기본으로 정상 사용자 상태 설정
     }
 
     // 필드를 직접 받아서 사용자 생성하는 생성자
-    public User(String username, String password, String name, String email, UserStatusEnum userStatusEnum) {
-        this.username = username;
+    public User(String email, String password, String name, UserStatusEnum userStatusEnum) {
+        this.email = email;
         this.password = password;
         this.name = name;
-        this.email = email;
         this.userStatus = UserStatusEnum.USER_NORMAL; // 기본으로 정상 사용자 상태 설정
     }
 

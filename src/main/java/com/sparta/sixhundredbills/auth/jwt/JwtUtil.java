@@ -66,15 +66,15 @@ public class JwtUtil {
 
     /**
      * 토큰 생성
-     * @param username 사용자 이름
+     * @param email 사용자 이름
      * @param setExpirationTime 토큰 만료 시간(ms)
      * @return 생성된 JWT 토큰
      */
-    public String createToken(String username, long setExpirationTime) {
+    public String createToken(String email, long setExpirationTime) {
         Date date = new Date();
         return BEARER_PREFIX +
                 Jwts.builder()
-                        .setSubject(username) // 사용자 식별자값(ID)
+                        .setSubject(email) // 사용자 식별자값(ID)
                         .setExpiration(new Date(date.getTime() + setExpirationTime)) // 만료 시간 설정
                         .setIssuedAt(date) // 발급일 설정
                         .signWith(key, signatureAlgorithm) // 서명 설정
@@ -83,20 +83,20 @@ public class JwtUtil {
 
     /**
      * Refresh Token 생성
-     * @param username 사용자 이름
+     * @param email 사용자 이름
      * @return 생성된 Refresh Token
      */
-    public String createRefreshToken(String username) {
-        return createToken(username, REFRESH_TOKEN_TIME);
+    public String createRefreshToken(String email) {
+        return createToken(email, REFRESH_TOKEN_TIME);
     }
 
     /**
      * Access Token 생성
-     * @param username 사용자 이름
+     * @param email 사용자 이름
      * @return 생성된 Access Token
      */
-    public String createAccessToken(String username) {
-        return createToken(username, TOKEN_TIME);
+    public String createAccessToken(String email) {
+        return createToken(email, TOKEN_TIME);
     }
 
     /**

@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class SignupResponseDto {
 
-    private String username;          // 사용자 아이디
+    private String email;          // 사용자 아이디
     private String name;              // 사용자 이름
     private LocalDateTime createdAt;  // 계정 생성 시간
     private LocalDateTime modifiedAt; // 계정 수정 시간
@@ -27,7 +27,7 @@ public class SignupResponseDto {
      * @param user User 엔티티 객체
      */
     public SignupResponseDto(User user) {
-        this.username = user.getUsername();        // User 엔티티로부터 사용자 아이디를 가져옴
+        this.email = user.getEmail();        // User 엔티티로부터 사용자 아이디를 가져옴
         this.name = user.getName();                // User 엔티티로부터 사용자 이름을 가져옴
         this.createdAt = user.getCreatedAt();      // User 엔티티로부터 계정 생성 시간을 가져옴
         this.modifiedAt = user.getModifiedAt();    // User 엔티티로부터 계정 수정 시간을 가져옴

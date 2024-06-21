@@ -25,7 +25,7 @@ public class SignupRequestDto {
     @NotBlank(message = "ID는 공백일 수 없습니다.")
     @Size(min = 4, max = 10, message = "아이디는 최소 4자 이상, 10자 이하로 작성해주세요.")
     @Pattern(regexp = "^[a-z0-9]+$", message = "아이디는 소문자(a~z) 영문 + 숫자(0~9)만을 허용합니다.")
-    private String username;
+    private String email;
 
     /**
      * 사용자 비밀번호
@@ -46,15 +46,9 @@ public class SignupRequestDto {
     @NotBlank(message = "이름은 공백일 수 없습니다.")
     private String name;
 
-
-    /**
-     * 사용자 이메일
-     * - 유효한 이메일 형식이어야 함
-     * - 공백 불가
-     */
-    @Email(message = "유효한 이메일 주소를 입력해주세요.")
-    @NotBlank(message = "email은 공백일 수 없습니다.")
-    private String email;
+    public String getEmail() {
+        return "";
+    }
 }
 
 

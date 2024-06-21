@@ -57,7 +57,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             // Spring Security의 UsernamePasswordAuthenticationToken을 사용하여 인증 매니저에게 인증을 요청
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            loginRequestDto.getUsername(),
+                            loginRequestDto.getEmail(),
                             loginRequestDto.getPassword(),
                             null
                     )

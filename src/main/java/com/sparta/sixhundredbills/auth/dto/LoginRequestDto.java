@@ -11,6 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 public class LoginRequestDto {
-    private String username; // 사용자 이름을 저장하는 필드
+    private String email; // 사용자 이름을 저장하는 필드
     private String password; // 사용자 비밀번호를 저장하는 필드
 }

@@ -95,13 +95,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     /**
      * 인증 설정 메서드.
-     * @param username 사용자 이름
+     * @param email 사용자 이름
      */
-    public void setAuthentication(String username) {
+    public void setAuthentication(String email) {
         // 빈 보안 컨텍스트 생성
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         // 인증 객체 생성
-        Authentication authentication = createAuthentication(username);
+        Authentication authentication = createAuthentication(email);
         // 보안 컨텍스트에 인증 객체 설정
         context.setAuthentication(authentication);
 
@@ -111,12 +111,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     /**
      * 인증 객체 생성 메서드.
-     * @param username 사용자 이름
+     * @param email 사용자 이름
      * @return 인증 객체
      */
-    private Authentication createAuthentication(String username) {
+    private Authentication createAuthentication(String email) {
         // 사용자 이름을 기반으로 UserDetails 객체 로드
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
         // UserDetails 객체를 기반으로 UsernamePasswordAuthenticationToken 객체 생성
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
