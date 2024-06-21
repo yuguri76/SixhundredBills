@@ -118,7 +118,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private void successLogin(HttpServletResponse res) {
         try {
             res.setCharacterEncoding("UTF-8");
-            res.getWriter().println("로그인이 성공하였습니다! (토큰/리프레시토큰 생성)");
+            res.getWriter().println("Login Successful! (Create Access Tokens/Refresh Tokens)");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
