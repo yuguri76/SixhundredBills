@@ -1,4 +1,4 @@
-package com.sparta.sixhundredbills.auth.exception;
+package com.sparta.sixhundredbills.exception;
 
 
 // CustomException이라는 사용자 정의 예외를 정의하고,

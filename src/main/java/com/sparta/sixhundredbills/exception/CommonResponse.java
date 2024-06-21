@@ -1,4 +1,4 @@
-package com.sparta.sixhundredbills.auth.exception;
+package com.sparta.sixhundredbills.exception;
 
 import lombok.Builder;
 import lombok.Getter;
