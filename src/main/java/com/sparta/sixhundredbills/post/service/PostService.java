@@ -103,4 +103,10 @@ public class PostService {
 
         postRepository.delete(post);
     }
+
+    // postId 로 post 객체 받아오는 메소드 / 주문 수정 기능에 필요
+    public Post findPostById(Long id) {
+        return postRepository.findById(id)
+                .orElseThrow(() -> new NotFoundPostException());
+    }
 }

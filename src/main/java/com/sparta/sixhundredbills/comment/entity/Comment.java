@@ -1,6 +1,7 @@
 package com.sparta.sixhundredbills.comment.entity;
 
 import com.sparta.sixhundredbills.auth.entity.User;
+import com.sparta.sixhundredbills.comment.dto.CommentRequestDto;
 import com.sparta.sixhundredbills.post.entity.Post;
 import com.sparta.sixhundredbills.timestamp.TimeStamp;
 import jakarta.persistence.*;
@@ -19,10 +20,14 @@ public class Comment extends TimeStamp {
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    // 몰라잉 어려워잉
+
+//    @ManyToOne
+//    @JoinColumn(name = "parent_id")
+//    private Comment parentId;
     private Long parentId;
     private String showName;
     private String comment;
@@ -33,5 +38,11 @@ public class Comment extends TimeStamp {
         this.parentId = parentId;
         this.showName = showName;
         this.comment = comment;
+    }
+
+    public void updateComment(CommentRequestDto requestDto, User user, Post post) {
+        this.user = user;
+        this.post = post;
+        this.comment = requestDto.getComment();
     }
 }
