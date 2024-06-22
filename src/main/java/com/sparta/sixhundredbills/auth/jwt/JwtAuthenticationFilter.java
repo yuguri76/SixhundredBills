@@ -1,9 +1,10 @@
 package com.sparta.sixhundredbills.auth.jwt;
 
-import com.sparta.sixhundredbills.auth.dto.LoginRequestDto;
-import com.sparta.sixhundredbills.exception.ErrorEnum;
-import com.sparta.sixhundredbills.auth.service.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.sixhundredbills.auth.dto.LoginRequestDto;
+import com.sparta.sixhundredbills.auth.service.AuthService;
+import com.sparta.sixhundredbills.exception.CommonResponse;
+import com.sparta.sixhundredbills.exception.ErrorEnum;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +23,7 @@ import java.io.IOException;
  * Spring Security의 UsernamePasswordAuthenticationFilter를 확장하여 JWT 기반 인증을 처리.
 
  * 사용자 로그인 요청이 처리 & 인증이 성공시 JWT 토큰이 생성 => 클라이언트에게 전달.
- * 실패 시 해당하는 적저한 오류 MSG & HTTP 상태 코드 반환.
+ * 실패 시 해당하는 적절한 오류 MSG & HTTP 상태 코드 반환.
  */
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -117,8 +118,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
      */
     private void successLogin(HttpServletResponse res) {
         try {
+            // 로그인 성공 메시지를 담은 CommonResponse 객체 생성
+            CommonResponse<Void> response = CommonResponse.<Void>builder()
+                    .msg("로그인 성공")
+                    .statusCode(200)
+                    .build();
+
+            // 응답 설정: UTF-8 인코딩, JSON 콘텐츠 타입
             res.setCharacterEncoding("UTF-8");
-            res.getWriter().println("Login Successful! (Create Access Tokens/Refresh Tokens)");
+            res.setContentType("application/json");
+
+            // 응답에 메시지를 작성
+            res.getWriter().write(new ObjectMapper().writeValueAsString(response));
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
