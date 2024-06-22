@@ -33,9 +33,7 @@ public class ProfileService {
      * */
     public ProfileResponseDto getProfile(User user) {
         // 해당 유저가 DB 에 존재하는지 확인하고 유저 정보 가져오기
-        User getUser = userRepository.findByUsername(user.getUsername()).orElseThrow(() ->
-                new UnauthorizedException("유효하지 않은 토큰입니다")
-        );
+        User getUser = getUserByUsername(user.getUsername());
         // 조회된 유저 정보를 프로필 Dto 에 필요한 내용만 담아서 반환
         return ProfileResponseDto.fromUser(getUser);
     }
@@ -49,9 +47,7 @@ public class ProfileService {
     @Transactional
     public ProfileResponseDto updateProfile(User user, ProfileRequestDto profileRequestDto) {
         // 해당 유저가 DB 에 존재하는지 확인
-        User getUser = userRepository.findByUsername(user.getUsername()).orElseThrow(() ->
-                new UnauthorizedException("유효하지 않은 토큰입니다")
-        );
+        User getUser = getUserByUsername(user.getUsername());
 
         // 현재 비밀번호와 입력받은 비밀번호가 동일한지 확인
         if (!passwordEncoder.matches(profileRequestDto.getPassword(), getUser.getPassword())) {
@@ -91,4 +87,17 @@ public class ProfileService {
         // 수정 완료된 유저 정보를 프로필 Dto 에 내용을 담아서 반환
         return ProfileResponseDto.fromUser(getUser);
     }
+
+    /**
+     * 인증된 유저의 정보를 찾아오는 메서드
+     * 해당 유저가 DB 에 존재하는지 확인
+     * @param username  // 유저의 고유값
+     * @return User 객체 반환
+     * */
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() ->
+                new UnauthorizedException("유효하지 않은 토큰입니다")
+        );
+    }
+
 }
