@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 
@@ -52,6 +53,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidEnteredException.class)
     public ResponseEntity<String> invalidEnteredException(String message) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+    }
+
+    /**
+     * ResponseStatusException 예외 처리
+     * @param  e (HttpStatusCode status, String reason)
+     * @return ResponseStatusException 이 호출될 때 사용된 메시지와 상태코드를 반환
+     * */
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<String> handleResponseStatusException(ResponseStatusException e) {
+        return new ResponseEntity<>(e.getReason(), e.getStatusCode());
     }
 
 }

@@ -24,10 +24,14 @@ public class UserDetailsImpl implements UserDetails {
         this.user = user;
     }
 
-    //    public User getUser(){
-    //        return this.user;
-    //    }
-
+    /**
+     * 게시물 및 댓글파트에서 사용자 정보 가져오려면 필수불가결합니다!
+     * 추가하였습니다 - 유규리
+     * 기존 주석 처리된 getUser() 메서드 삭제하고 이동시켰습니다 - 박민영
+     */
+    public User getUser() {
+        return user;
+    }
 
     /**
      * 사용자가 가지고 있는 권한 목록을 반환한다.
@@ -99,14 +103,6 @@ public class UserDetailsImpl implements UserDetails {
         return true;
     }
 
-
-    /**
-     * 게시물 및 댓글파트에서 사용자 정보 가져오려면 필수불가결합니다!
-     * 추가하였습니다 - 유규리
-     */
-    public User getUser() {
-        return user;
-    }
 }
 
 
