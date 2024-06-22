@@ -1,6 +1,7 @@
 package com.sparta.sixhundredbills.auth.entity;
 
 import com.sparta.sixhundredbills.auth.dto.SignupRequestDto;
+import com.sparta.sixhundredbills.profile.dto.ProfileRequestDto;
 import com.sparta.sixhundredbills.timestamp.TimeStamp;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -87,9 +88,8 @@ public class User extends TimeStamp {
     }
 
     // 사용자 정보 업데이트 메서드
-    public void updateProfile(User user, String newPassword) {
+    public void updateProfile(ProfileRequestDto user, String newPassword) {
         this.name = user.getName();
-        this.email = user.getEmail();
         this.password = newPassword;
     }
 }
