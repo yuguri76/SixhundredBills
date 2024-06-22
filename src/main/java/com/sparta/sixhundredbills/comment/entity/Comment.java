@@ -5,6 +5,7 @@ import com.sparta.sixhundredbills.comment.dto.CommentRequestDto;
 import com.sparta.sixhundredbills.post.entity.Post;
 import com.sparta.sixhundredbills.timestamp.TimeStamp;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,6 +41,7 @@ public class Comment extends TimeStamp {
     private String showName;
     private String comment;
 
+    @Builder
     public Comment(Post post, User user, String showName, String comment) {
         this.post = post;
         this.user = user;

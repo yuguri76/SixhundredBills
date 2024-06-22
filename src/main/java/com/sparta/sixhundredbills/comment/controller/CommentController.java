@@ -40,8 +40,8 @@ public class CommentController {
         } else {
             responseDto = commentService.createComment(postId, parentCommentId, requestDto, userDetails);
         }
-
-        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+//        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     /**
@@ -56,7 +56,7 @@ public class CommentController {
                                                                 @RequestParam(value = "size", defaultValue = "5") int size,
                                                                 @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy) {
         List<CommentResponseDto> response = commentService.getComments(postId, page - 1, size, sortBy);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -73,7 +73,10 @@ public class CommentController {
                                                             @RequestBody CommentRequestDto requestDto,
                                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         CommentResponseDto responseDto = commentService.updateComment(postId, commentId, requestDto, userDetails);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        //        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        return ResponseEntity.ok(responseDto);
+//        return ResponseEntity.badRequest().body(responseDto);
+//        return ResponseEntity.status(HttpStatus.MULTI_STATUS).body(responseDto);
     }
 
     /**
@@ -84,10 +87,10 @@ public class CommentController {
      * @return 삭제된 댓글의 응답 데이터
      */
     @DeleteMapping("/{postId}/comments/{commentId}")
-    public ResponseEntity<CommentDeleteResponseDto> deleteComemnt(@PathVariable Long postId,
-                                                                  @PathVariable Long commentId,
-                                                                  @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        CommentDeleteResponseDto responseDto = commentService.deleteComment(postId, commentId, userDetails);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    public ResponseEntity<String> deleteComemnt(@PathVariable Long postId,
+                                                @PathVariable Long commentId,
+                                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        String responseDto = commentService.deleteComment(postId, commentId, userDetails);
+        return ResponseEntity.ok(responseDto);
     }
 }

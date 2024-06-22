@@ -4,7 +4,6 @@ import com.amazonaws.services.kms.model.NotFoundException;
 import com.sparta.sixhundredbills.auth.entity.User;
 import com.sparta.sixhundredbills.auth.repository.UserRepository;
 import com.sparta.sixhundredbills.auth.security.UserDetailsImpl;
-import com.sparta.sixhundredbills.comment.dto.CommentDeleteResponseDto;
 import com.sparta.sixhundredbills.comment.dto.CommentRequestDto;
 import com.sparta.sixhundredbills.comment.dto.CommentResponseDto;
 import com.sparta.sixhundredbills.comment.entity.Comment;
@@ -50,7 +49,13 @@ public class CommentService {
         }
 
         // 댓글 Entity 를 DB에 저장하기
-        Comment newComment = new Comment(post, userDetails.getUser(), showName, requestDto.getComment());
+        Comment newComment = Comment.builder()
+                .post(post)
+                .user(userDetails.getUser())
+                .showName(showName)
+                .comment(requestDto.getComment())
+                .build();
+
         if (parentComment != null) {
             newComment.setParentComment(parentComment);
             parentComment.getChildrenComment().add(newComment);
@@ -58,7 +63,10 @@ public class CommentService {
 
         commentRepository.save(newComment);
         // CommentResponseDto 를 반환하기
-        return new CommentResponseDto(newComment);
+        return CommentResponseDto.builder()
+                .comment(newComment.getComment())
+                .showName(newComment.getShowName())
+                .build();
     }
 
     // 게시물별 댓글 조회
@@ -67,7 +75,16 @@ public class CommentService {
         Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
 
         Pageable pageable = PageRequest.of(page, size, sort);
-        Page<CommentResponseDto> CommentPage = commentRepository.findAllByPost(post, pageable).map(CommentResponseDto::new);
+        Page<CommentResponseDto> CommentPage = commentRepository.findAllByPost(post, pageable).map(
+                // List<Comment> [comment1, comment2, comment3]
+                comment -> CommentResponseDto.builder()
+                        .comment(comment.getComment())
+                        .showName(comment.getShowName())
+                        .build()
+                // CommentResponseDto::new
+                // new CommentResponseDto(Comment)
+                // Comment -> CommentResponseDto
+        );
         List<CommentResponseDto> responseDtoList = CommentPage.getContent();
 
         if (responseDtoList.isEmpty()) {
@@ -89,9 +106,11 @@ public class CommentService {
         comment.updateComment(requestDto, user, post);
 
         Comment saveComment = commentRepository.save(comment);
-        CommentResponseDto responseDto = new CommentResponseDto(saveComment);
 
-        return responseDto;
+        return CommentResponseDto.builder()
+                .comment(saveComment.getComment())
+                .showName(saveComment.getShowName())
+                .build();
     }
 
     public Comment findByCommentId(Long commentId) {
@@ -100,7 +119,7 @@ public class CommentService {
     }
 
     // 댓글 삭제
-    public CommentDeleteResponseDto deleteComment(Long postId, Long commentId, UserDetailsImpl userDetails) {
+    public String deleteComment(Long postId, Long commentId, UserDetailsImpl userDetails) {
         Post post = postService.findPostById(postId);
         Comment comment = findByCommentId(commentId);
         User user = userDetails.getUser();
@@ -110,6 +129,7 @@ public class CommentService {
         }
 
         commentRepository.delete(comment);
-        return new CommentDeleteResponseDto("댓글이 삭제되었습니다.");
+        return "댓글이 삭제되었습니다.";
     }
 }
+// 루시드
