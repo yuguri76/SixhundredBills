@@ -3,9 +3,9 @@ package com.sparta.sixhundredbills.auth.entity;
 import com.sparta.sixhundredbills.auth.dto.SignupRequestDto;
 import com.sparta.sixhundredbills.timestamp.TimeStamp;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -18,8 +18,7 @@ import java.time.LocalDateTime;
 
 @Entity // JPA 엔티티임을 나타내는 어노테이션
 @Getter // Lombok: 모든 필드에 대한 getter 메서드 자동 생성
-@Setter // Lombok: 모든 필드에 대한 setter 메서드 자동 생성
-@Table(name = "users") // 데이터베이스 테이블 이름 지정 - ERD에 맞게 users로 수정하였습니다 - 유규리
+@Table(name = "users") // 데이터베이스 테이블 이름 지정 - ERD에 맞게 users로 수정
 @NoArgsConstructor // Lombok: 매개변수 없는 기본 생성자 자동 생성
 public class User extends TimeStamp {
 
@@ -36,9 +35,6 @@ public class User extends TimeStamp {
     @Column(name = "NAME", nullable = false, length = 40) // 데이터베이스 컬럼 설정
     private String name; // 이름
 
-
-
-    @Setter // setter를 직접 설정
     @Column(nullable = false) // 데이터베이스 컬럼 설정
     @Enumerated(EnumType.STRING) // Enum 타입을 문자열로 저장
     private UserStatusEnum userStatus; // 사용자 상태
@@ -60,12 +56,15 @@ public class User extends TimeStamp {
         this.userStatus = UserStatusEnum.USER_NORMAL; // 회원가입 시 기본으로 정상 사용자 상태 설정
     }
 
-    // 필드를 직접 받아서 사용자 생성하는 생성자
+    // 빌더 패턴을 적용한 생성자
+    @Builder
     public User(String email, String password, String name, UserStatusEnum userStatusEnum) {
         this.email = email;
         this.password = password;
         this.name = name;
-        this.userStatus = UserStatusEnum.USER_NORMAL; // 기본으로 정상 사용자 상태 설정
+        this.userStatus = userStatusEnum != null ? userStatusEnum : UserStatusEnum.USER_NORMAL;
+        this.refreshToken = refreshToken;
+        this.userStatusTime = userStatusTime != null ? userStatusTime : LocalDateTime.now();
     }
 
     // 사용자의 상태에 따라 역할을 반환하는 메서드
@@ -76,5 +75,11 @@ public class User extends TimeStamp {
     // 리프레시 토큰 설정 메서드
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+
+    // 매개변수로 전달된 newPassword 값을 사용하여 User 객체의 비밀번호 필드인 password 를 업뎃.
+    public void setPassword(String newPassword) {
+        this.password = newPassword;
     }
 }

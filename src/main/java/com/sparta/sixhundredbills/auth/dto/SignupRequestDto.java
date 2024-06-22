@@ -1,19 +1,20 @@
 package com.sparta.sixhundredbills.auth.dto;
 
-import jakarta.validation.constraints.Email;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 /*
  * 회원가입 요청을 위한 데이터 전송 객체 (DTO).
- * 각 필드는 유효성 검사를 포함하며, Lombok을 사용하여 getter와 setter 메소드를 자동 생성.
+ * 각 필드는 유효성 검사를 포함하며, Lombok을 사용하여 getter와 builder 메소드를 자동 생성.
  */
 
 @Getter
-@Setter
+@NoArgsConstructor
 public class SignupRequestDto {
 
     /**
@@ -46,9 +47,10 @@ public class SignupRequestDto {
     @NotBlank(message = "이름은 공백일 수 없습니다.")
     private String name;
 
-    public String getEmail() {
-        return "";
+    @Builder
+    public SignupRequestDto(String email, String password, String name) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
     }
 }
-
-
