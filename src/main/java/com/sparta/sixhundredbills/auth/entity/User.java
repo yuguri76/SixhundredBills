@@ -58,7 +58,7 @@ public class User extends TimeStamp {
 
     // 빌더 패턴을 적용한 생성자
     @Builder
-    public User(String email, String password, String name, UserStatusEnum userStatusEnum) {
+    public User(String email, String password, String name, UserStatusEnum userStatusEnum, String refreshToken, LocalDateTime userStatusTime) {
         this.email = email;
         this.password = password;
         this.name = name;
