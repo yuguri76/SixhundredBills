@@ -7,9 +7,14 @@ import com.sparta.sixhundredbills.timestamp.TimeStamp;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class Comment extends TimeStamp {
 
@@ -25,17 +30,19 @@ public class Comment extends TimeStamp {
     @JoinColumn(name = "user_id")
     private User user;
 
-//    @ManyToOne
-//    @JoinColumn(name = "parent_id")
-//    private Comment parentId;
-    private Long parentId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Comment parentComment;
+
+    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Comment> childrenComment = new ArrayList<>();
+
     private String showName;
     private String comment;
 
-    public Comment(Post post, User user, Long parentId, String showName, String comment) {
+    public Comment(Post post, User user, String showName, String comment) {
         this.post = post;
         this.user = user;
-        this.parentId = parentId;
         this.showName = showName;
         this.comment = comment;
     }

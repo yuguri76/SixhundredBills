@@ -31,9 +31,16 @@ public class CommentController {
      */
     @PostMapping("/{postId}/comments")
     public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long postId,
+                                                            @RequestParam(required = false) Long parentCommentId,
                                                             @RequestBody CommentRequestDto requestDto,
                                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        CommentResponseDto responseDto = commentService.createComment(postId, requestDto, userDetails);
+        CommentResponseDto responseDto;
+        if (parentCommentId == null) {
+            responseDto = commentService.createComment(postId, null, requestDto, userDetails);
+        } else {
+            responseDto = commentService.createComment(postId, parentCommentId, requestDto, userDetails);
+        }
+
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 

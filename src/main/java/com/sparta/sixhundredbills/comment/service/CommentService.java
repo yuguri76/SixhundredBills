@@ -38,16 +38,27 @@ public class CommentService {
     private PostService postService;
 
     // 댓글 생성
-    public CommentResponseDto createComment(Long postId, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
+    public CommentResponseDto createComment(Long postId, Long parentCommentId, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
         // postId로 게시물 찾기 -> 그 게시물이 없을 경우 예외처리
         Post post = postRepository.findById(postId).orElseThrow(NotFoundPostException::new);
         // 익명 닉네임 생성
         String showName = AnonymousNameGenerator.generate();
+        Comment parentComment = null;
+        if (parentCommentId != null) {
+            parentComment = commentRepository.findById(parentCommentId)
+                    .orElseThrow(() -> new NotFoundException("상위 댓글을 찾을 수 없습니다."));
+        }
+
         // 댓글 Entity 를 DB에 저장하기
-        Comment comment = new Comment(post, userDetails.getUser(), 9999L, showName, requestDto.getComment());
-        commentRepository.save(comment);
+        Comment newComment = new Comment(post, userDetails.getUser(), showName, requestDto.getComment());
+        if (parentComment != null) {
+            newComment.setParentComment(parentComment);
+            parentComment.getChildrenComment().add(newComment);
+        }
+
+        commentRepository.save(newComment);
         // CommentResponseDto 를 반환하기
-        return new CommentResponseDto(comment);
+        return new CommentResponseDto(newComment);
     }
 
     // 게시물별 댓글 조회
