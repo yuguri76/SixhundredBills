@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @Entity // JPA 엔티티임을 나타내는 어노테이션
 @Getter // Lombok: 모든 필드에 대한 getter 메서드 자동 생성
 @Setter // Lombok: 모든 필드에 대한 setter 메서드 자동 생성
-@Table(name = "sixhundredbills") // 데이터베이스 테이블 이름 지정
+@Table(name = "users") // 데이터베이스 테이블 이름 지정 - ERD에 맞게 users로 수정하였습니다 - 유규리
 @NoArgsConstructor // Lombok: 매개변수 없는 기본 생성자 자동 생성
 public class User extends TimeStamp {
 
