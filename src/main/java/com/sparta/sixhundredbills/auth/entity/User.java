@@ -85,4 +85,11 @@ public class User extends TimeStamp {
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
+
+    // 사용자 정보 업데이트 메서드
+    public void updateProfile(User user, String newPassword) {
+        this.name = user.getName();
+        this.email = user.getEmail();
+        this.password = newPassword;
+    }
 }
