@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 
 /**
  * Spring Security 설정 클래스.
@@ -51,26 +52,30 @@ public class SecurityConfig {
      * @param http HttpSecurity 객체
      * @return 설정된 SecurityFilterChain 객체
      * @throws Exception 설정 중 발생할 수 있는 예외
+     * (필터중 빠진 것들이 있어서 일괄 수정했습니다 role도 추가하셔야 할 것 같아서 해당부분 주석처리하고 넣어놓았으니 나중에 활용하시면 될것같습니다) - 유규리
      */
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception { // 보안 필터 체인을 설정.
-        http
-                .csrf(csrf -> csrf.disable()) // CSRF 보호를 비활성화.
-                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션을 사용하지 않도록 설정합니다.
-                .authorizeRequests(authorizeRequests -> // 요청에 대한 인가 규칙을 설정.
-                        authorizeRequests
-                                .requestMatchers("/users/signup").permitAll() // 회원가입 경로는 인증 없이 접근 가능.
-                                .requestMatchers("/users/login").permitAll() // 로그인 경로는 인증 없이 접근 가능.
-                                .anyRequest().authenticated() // 그 외 모든 요청은 인증이 필요.
-                );
+        // CSRF 설정
+        http.csrf((csrf) -> csrf.disable());
 
-        http.exceptionHandling(exception -> // 예외 처리 설정
-                exception
-                        .authenticationEntryPoint(jwtAuthenticationEntryPoint()) // 인증 실패 시 처리할 EntryPoint를 설정.
-                        .accessDeniedPage("/") // 권한이 없는 경우 처리할 페이지를 설정.
+        // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
+        http.sessionManagement((sessionManagement) ->
+                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
-        // JWT 인증 필터를 추가합니다.
+        http.authorizeHttpRequests((authorizeHttpRequests) ->
+                authorizeHttpRequests
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
+                        .requestMatchers("/").permitAll() // 메인 페이지 요청 허가
+                        .requestMatchers("/users/signup").permitAll() // 회원가입 요청 허가
+                        .requestMatchers("/users/login").permitAll() // 로그인 요청 허가
+                        .requestMatchers("/users/**").authenticated() // '/user/'로 시작하는 요청 인증 필요
+                       // .requestMatchers("/admin/**").hasAuthority(UserRoleEnum.ADMIN.getAuthority()) //권한이 Admin 인 유저만 접근가능
+                        .anyRequest().authenticated() // 그 외 모든 요청 인증처리
+        );
+
+        // 필터 관리
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 

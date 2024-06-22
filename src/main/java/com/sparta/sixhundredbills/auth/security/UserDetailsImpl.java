@@ -99,6 +99,15 @@ public class UserDetailsImpl implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
+    /**
+     * 게시물 및 댓글파트에서 사용자 정보 가져오려면 필수불가결합니다!
+     * 추가하였습니다 - 유규리
+     */
+    public User getUser() {
+        return user;
+    }
 }
 
 

@@ -2,6 +2,7 @@ package com.sparta.sixhundredbills.post.controller;
 
 
 import com.sparta.sixhundredbills.auth.entity.User;
+import com.sparta.sixhundredbills.auth.security.UserDetailsImpl;
 import com.sparta.sixhundredbills.post.dto.PostRequestDto;
 import com.sparta.sixhundredbills.post.dto.PostResponseDto;
 import com.sparta.sixhundredbills.post.service.PostService;
@@ -12,60 +13,72 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping("/post")
+@RequestMapping("/posts")
 @RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
 
     /**
-     * 게시물을 생성하는 메서드
-     * @param postRequestDto 게시물 생성 요청 DTO
-     * @param user 인증된 사용자 정보
-     * @return 생성된 게시물 정보
+     * 게시물을 생성하는 엔드포인트
+     * @param postRequestDto 게시물 요청 데이터
+     * @param userDetails 인증된 사용자 정보
+     * @return 생성된 게시물의 응답 데이터
      */
+
     @PostMapping
-    public ResponseEntity<PostResponseDto> createPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal User user) {
-        PostResponseDto responseDto = postService.createPost(postRequestDto, user);
+    public ResponseEntity<PostResponseDto> createPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        PostResponseDto responseDto = postService.createPost(postRequestDto, userDetails.getUser());
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     /**
-     * 모든 게시물을 페이지네이션하여 조회하는 메서드
-     * @param page 페이지 번호
-     * @param size 페이지 크기
-     * @return 페이지네이션된 게시물 목록
+     * 게시물을 조회하는 엔드포인트
+     * @param page 조회할 페이지 번호
+     * @return 페이징된 게시물 응답 데이터
      */
     @GetMapping
-    public ResponseEntity<Page<PostResponseDto>> getPosts(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<Page<PostResponseDto>> getPosts(@RequestParam int page) {
+        int size = 5;
         Page<PostResponseDto> posts = postService.getPosts(page, size);
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
     /**
-     * 게시물을 수정하는 메서드
+     * 게시물을 수정하는 엔드포인트
      * @param postId 수정할 게시물 ID
-     * @param postRequestDto 게시물 수정 요청 DTO
-     * @param user 인증된 사용자 정보
-     * @return 수정된 게시물 정보
+     * @param postRequestDto 게시물 요청 데이터
+     * @param userDetails 인증된 사용자 정보
+     * @return 수정된 게시물의 응답 데이터
      */
     @PutMapping("/{postId}")
-    public ResponseEntity<PostResponseDto> updatePost(@PathVariable Long postId, @RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal User user) {
-        PostResponseDto responseDto = postService.updatePost(postId, postRequestDto, user);
+    public ResponseEntity<PostResponseDto> updatePost(@PathVariable Long postId, @RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        PostResponseDto responseDto = postService.updatePost(postId, postRequestDto, userDetails.getUser());
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     /**
-     * 게시물을 삭제하는 메서드
+     * 게시물을 삭제하는 엔드포인트
      * @param postId 삭제할 게시물 ID
-     * @param user 인증된 사용자 정보
-     * @return 삭제 결과
+     * @param userDetails 인증된 사용자 정보
+     * @return 응답 상태 코드
      */
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long postId, @AuthenticationPrincipal User user) {
-        postService.deletePost(postId, user);
+    public ResponseEntity<Void> deletePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        postService.deletePost(postId, userDetails.getUser());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
