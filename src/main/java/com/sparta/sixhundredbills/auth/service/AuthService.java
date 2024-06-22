@@ -28,7 +28,7 @@ public class AuthService {
     public void login(LoginRequestDto loginRequestDto, HttpServletResponse response, HttpServletRequest request) {
 
         // 사용자명을 기반으로 사용자 정보를 데이터베이스에서 조회.
-        User user = userRepository.findByUsername(loginRequestDto.getEmail())
+        User user = userRepository.findByEmail(loginRequestDto.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
 
         // 입력된 비밀번호를 데이터베이스에 저장된 비밀번호와 비교하여 일치 여부를 확인.
@@ -60,7 +60,7 @@ public class AuthService {
         String email = String.valueOf(jwtUtil.getUserInfoFromToken(refreshToken).getSubject());
 
         // 데이터베이스에서 해당 사용자를 조회합니다. 사용자가 존재하지 않으면 예외를 발생.
-        User user = userRepository.findByUsername(email).orElseThrow(() -> new IllegalArgumentException());
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException());
 
         // 데이터베이스에 저장된 Refresh Token과 입력된 Refresh Token을 비교하여 일치 여부를 확인.
         String storedRefreshToken = jwtUtil.substringToken(user.getRefreshToken());
@@ -83,7 +83,7 @@ public class AuthService {
         String email = String.valueOf(jwtUtil.getUserInfoFromToken(accessToken).getSubject());
 
         // 데이터베이스에서 해당 사용자를 조회합니다. 사용자가 존재하지 않으면 예외를 발생.
-        User user = userRepository.findByUsername(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
         // 사용자의 Refresh Token을 삭제하여 로그아웃 처리.

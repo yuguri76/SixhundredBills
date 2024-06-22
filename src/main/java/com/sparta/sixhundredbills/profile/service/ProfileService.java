@@ -31,7 +31,7 @@ public class ProfileService {
      * */
     public ProfileResponseDto getProfile(User user) {
         // 해당 유저가 DB 에 존재하는지 확인하고 유저 정보 가져오기
-        User getUser = userRepository.findByUsername(user.getEmail()).orElseThrow(() ->
+        User getUser = userRepository.findByEmail(user.getEmail()).orElseThrow(() ->
                 new UnauthorizedException("유효하지 않은 토큰입니다")
         );
         // 조회된 유저 정보를 프로필 Dto 에 필요한 내용만 담아서 반환
@@ -47,7 +47,7 @@ public class ProfileService {
     @Transactional
     public ProfileResponseDto updateProfile(User user, ProfileRequestDto profileRequestDto) {
         // 해당 유저가 DB 에 존재하는지 확인
-        User getUser = userRepository.findByUsername(user.getEmail()).orElseThrow(() ->
+        User getUser = userRepository.findByEmail(user.getEmail()).orElseThrow(() ->
                 new UnauthorizedException("유효하지 않은 토큰입니다")
         );
 

@@ -32,7 +32,7 @@ public class UserService {
         UserStatusEnum userStatusEnum = UserStatusEnum.USER_NORMAL; // 사용자 상태 초기화
 
         // 회원 중복 확인
-        Optional<User> checkUsername = userRepository.findByUsername(email);
+        Optional<User> checkUsername = userRepository.findByEmail(email);
         if (checkUsername.isPresent()) {
             throw new CustomException(BAD_DUPLICATE); // 이미 존재하는 사용자명일 경우 예외 처리
         }

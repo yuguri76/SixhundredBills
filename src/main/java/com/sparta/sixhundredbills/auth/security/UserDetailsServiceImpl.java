@@ -29,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         // UserRepository를 사용하여 사용자 조회
-        User user = userRepository.findByUsername(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자가 존재하지 않습니다: " + email));
 
         // UserDetailsImpl 객체를 사용하여 UserDetails 인터페이스 구현체 반환
