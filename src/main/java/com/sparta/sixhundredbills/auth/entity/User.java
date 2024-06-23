@@ -39,6 +39,10 @@ public class User extends TimeStamp {
     @Enumerated(EnumType.STRING) // Enum 타입을 문자열로 저장
     private UserStatusEnum userStatus; // 사용자 상태
 
+    @Column(name = "ROLE", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role; // Role 필드 추가
+
     @Column(name = "REFRESH_TOKEN", length = 255) // 데이터베이스 컬럼 설정
     private String refreshToken; // 리프레시 토큰
 
@@ -53,23 +57,38 @@ public class User extends TimeStamp {
         this.email = signupRequestDto.getEmail();
         this.password = signupRequestDto.getPassword();
         this.name = signupRequestDto.getName();
-        this.userStatus = UserStatusEnum.USER_NORMAL; // 회원가입 시 기본으로 정상 사용자 상태 설정
+        this.userStatus = UserStatusEnum.USER_NORMAL;
+        this.role = Role.USER; // 기본 역할을 USER로 설정
+        this.userStatusTime = LocalDateTime.now();
     }
 
     // 빌더 패턴을 적용한 생성자
     @Builder
-    public User(String email, String password, String name, UserStatusEnum userStatusEnum, String refreshToken, LocalDateTime userStatusTime) {
+    public User(String email, String password, String name, UserStatusEnum userStatusEnum, Role role, String refreshToken, LocalDateTime userStatusTime) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.userStatus = userStatusEnum != null ? userStatusEnum : UserStatusEnum.USER_NORMAL;
+        this.role = role != null ? role : Role.USER;
         this.refreshToken = refreshToken;
         this.userStatusTime = userStatusTime != null ? userStatusTime : LocalDateTime.now();
     }
 
+    // 기존 빌드 오류 해결 로직(피드백 확인)
+    // 필요한 모든 필드를 초기화하는 생성자
+    public User(String email, String password, String name, UserStatusEnum userStatusEnum, Role role) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.userStatus = userStatusEnum;
+        this.role = role != null ? role : Role.USER;
+        this.userStatusTime = LocalDateTime.now();
+    }
+
+
     // 사용자의 상태에 따라 역할을 반환하는 메서드
     public String getRole() {
-        return this.userStatus == UserStatusEnum.USER_NORMAL ? Role.USER.name() : Role.ADMIN.name();
+        return this.role.name();
     }
 
     // 리프레시 토큰 설정 메서드
