@@ -1,8 +1,10 @@
 package com.sparta.sixhundredbills.auth.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.sixhundredbills.auth.dto.LoginRequestDto;
 import com.sparta.sixhundredbills.auth.entity.User;
 import com.sparta.sixhundredbills.auth.entity.UserStatusEnum;
+import com.sparta.sixhundredbills.exception.CommonResponse;
 import com.sparta.sixhundredbills.exception.ErrorEnum;
 import com.sparta.sixhundredbills.auth.jwt.JwtUtil;
 import com.sparta.sixhundredbills.auth.repository.UserRepository;
@@ -10,10 +12,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service // Spring에서 이 클래스를 서비스로 등록하여 관리.
 @RequiredArgsConstructor // Lombok을 사용하여 필수 생성자를 자동으로 생성.
@@ -25,13 +29,11 @@ public class AuthService {
 
     // 사용자 로그인 처리 메서드
     @Transactional // 트랜잭션 처리를 위한 어노테이션
-    public void login(LoginRequestDto loginRequestDto, HttpServletResponse response, HttpServletRequest request) {
-
-        // 사용자명을 기반으로 사용자 정보를 데이터베이스에서 조회.
+    public ResponseEntity<CommonResponse<Void>> login(LoginRequestDto loginRequestDto, HttpServletResponse response, HttpServletRequest request) {
         User user = userRepository.findByEmail(loginRequestDto.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
 
-        // 입력된 비밀번호를 데이터베이스에 저장된 비밀번호와 비교하여 일치 여부를 확인.
+        // 사용자명을 기반으로 사용자 정보를 데이터베이스에서 조회.
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("Invalid email or password");
         }
@@ -52,6 +54,14 @@ public class AuthService {
 
         // 사용자 객체에 생성된 Refresh Token을 저장. 나중에 사용자가 Refresh Token을 사용하여 접근 토큰을 재발급받을 때 사용.
         user.setRefreshToken(refreshToken);
+
+        CommonResponse<Void> commonResponse = CommonResponse.<Void>builder()
+                .msg("로그인 성공")
+                .statusCode(200)
+                .data(null)  // data 필드를 null로 설정
+                .build();
+
+        return ResponseEntity.ok(commonResponse);
     }
 
     // Access Token 재발급 처리 메서드

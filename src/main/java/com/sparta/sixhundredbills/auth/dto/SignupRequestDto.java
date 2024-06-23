@@ -1,6 +1,7 @@
 package com.sparta.sixhundredbills.auth.dto;
 
 import com.sparta.sixhundredbills.auth.entity.Role;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -23,9 +24,9 @@ public class SignupRequestDto {
      * - 길이: 최소 4자, 최대 10자
      * - 소문자 영문자와 숫자만 허용
      */
-    @NotBlank(message = "ID는 공백일 수 없습니다.")
-    @Size(min = 4, max = 10, message = "아이디는 최소 4자 이상, 10자 이하로 작성해주세요.")
-    @Pattern(regexp = "^[a-z0-9]+$", message = "아이디는 소문자(a~z) 영문 + 숫자(0~9)만을 허용합니다.")
+    @NotBlank(message = "email은 공백일 수 없습니다.")
+    @Size(min = 10, max = 50, message = "이메일 형식으로 작성해주세요.")
+    @Email(message = "이메일 형식으로 작성해주세요.")  // @Email 어노테이션을 사용하여 이메일 형식을 검증합니다.
     private String email;
 
     /**

@@ -26,7 +26,7 @@ public class User extends TimeStamp {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 생성되는 값, MySQL의 AUTO_INCREMENT와 같음
     private Long id;
 
-    @Column(name = "EMAIL", nullable = false, length = 35) // 데이터베이스 컬럼 설정
+    @Column(name = "EMAIL", nullable = false, length = 50) // 데이터베이스 컬럼 설정
     private String email; // 이메일 (사용자명)
 
     @Column(name = "PASSWORD", nullable = false, length = 60) // 데이터베이스 컬럼 설정
@@ -52,16 +52,6 @@ public class User extends TimeStamp {
     @Column(name = "USER_STATUS_TIME", nullable = false) // 데이터베이스 컬럼 설정
     private LocalDateTime userStatusTime; // 사용자 상태 변경 일시
 
-    // 회원가입 요청 정보로부터 사용자 생성하는 생성자
-    public User(SignupRequestDto signupRequestDto) {
-        this.email = signupRequestDto.getEmail();
-        this.password = signupRequestDto.getPassword();
-        this.name = signupRequestDto.getName();
-        this.userStatus = UserStatusEnum.USER_NORMAL;
-        this.role = Role.USER; // 기본 역할을 USER로 설정
-        this.userStatusTime = LocalDateTime.now();
-    }
-
     // 빌더 패턴을 적용한 생성자
     @Builder
     public User(String email, String password, String name, UserStatusEnum userStatusEnum, Role role, String refreshToken, LocalDateTime userStatusTime) {
@@ -74,17 +64,24 @@ public class User extends TimeStamp {
         this.userStatusTime = userStatusTime != null ? userStatusTime : LocalDateTime.now();
     }
 
-    // 기존 빌드 오류 해결 로직(피드백 확인)
     // 필요한 모든 필드를 초기화하는 생성자
+    public User(SignupRequestDto signupRequestDto) {
+        this.email = signupRequestDto.getEmail();
+        this.password = signupRequestDto.getPassword();
+        this.name = signupRequestDto.getName();
+        this.userStatus = UserStatusEnum.USER_NORMAL;
+        this.role = Role.USER;
+        this.userStatusTime = LocalDateTime.now();
+    }
+
     public User(String email, String password, String name, UserStatusEnum userStatusEnum, Role role) {
         this.email = email;
         this.password = password;
         this.name = name;
-        this.userStatus = userStatusEnum;
+        this.userStatus = userStatusEnum != null ? userStatusEnum : UserStatusEnum.USER_NORMAL;
         this.role = role != null ? role : Role.USER;
         this.userStatusTime = LocalDateTime.now();
     }
-
 
     // 사용자의 상태에 따라 역할을 반환하는 메서드
     public String getRole() {
@@ -95,7 +92,6 @@ public class User extends TimeStamp {
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
-
 
     // 매개변수로 전달된 newPassword 값을 사용하여 User 객체의 비밀번호 필드인 password 를 업뎃.
     public void setPassword(String newPassword) {
