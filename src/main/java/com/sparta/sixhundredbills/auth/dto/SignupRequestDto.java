@@ -1,19 +1,21 @@
 package com.sparta.sixhundredbills.auth.dto;
 
+import com.sparta.sixhundredbills.auth.entity.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
-/*
+/**
  * 회원가입 요청을 위한 데이터 전송 객체 (DTO).
- * 각 필드는 유효성 검사를 포함하며, Lombok을 사용하여 getter와 setter 메소드를 자동 생성.
+ * 각 필드는 유효성 검사를 포함하며, Lombok을 사용하여 getter와 builder 메소드를 자동 생성.
  */
 
 @Getter
-@Setter
+@NoArgsConstructor
 public class SignupRequestDto {
 
     /**
@@ -22,10 +24,10 @@ public class SignupRequestDto {
      * - 길이: 최소 4자, 최대 10자
      * - 소문자 영문자와 숫자만 허용
      */
-    @NotBlank(message = "ID는 공백일 수 없습니다.")
-    @Size(min = 4, max = 10, message = "아이디는 최소 4자 이상, 10자 이하로 작성해주세요.")
-    @Pattern(regexp = "^[a-z0-9]+$", message = "아이디는 소문자(a~z) 영문 + 숫자(0~9)만을 허용합니다.")
-    private String username;
+    @NotBlank(message = "email은 공백일 수 없습니다.")
+    @Size(min = 10, max = 50, message = "이메일 형식으로 작성해주세요.")
+    @Email(message = "이메일 형식으로 작성해주세요.")  // @Email 어노테이션을 사용하여 이메일 형식을 검증합니다.
+    private String email;
 
     /**
      * 사용자 비밀번호
@@ -47,18 +49,16 @@ public class SignupRequestDto {
     private String name;
 
     /**
-     * 사용자 자기소개 (선택 사항)
+     * 회원 권한
+     * - 기본값: USER
      */
-    private String intro;
+    private Role role;
 
-    /**
-     * 사용자 이메일
-     * - 유효한 이메일 형식이어야 함
-     * - 공백 불가
-     */
-    @Email(message = "유효한 이메일 주소를 입력해주세요.")
-    @NotBlank(message = "email은 공백일 수 없습니다.")
-    private String email;
+    @Builder
+    public SignupRequestDto(String email, String password, String name, Role role) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.role = role;
+    }
 }
-
-
