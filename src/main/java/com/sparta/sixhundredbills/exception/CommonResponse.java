@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Optional;
-
 @Getter
 @Setter
 @Builder // 빌더 패턴을 사용하여 객체를 생성하기 위한 Lombok 애노테이션
