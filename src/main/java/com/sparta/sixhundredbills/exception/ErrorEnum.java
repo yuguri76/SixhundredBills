@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 // 다양한 예외 상황을 정의하고 각 상황에 맞는 상태 코드 & 메시지 제공.
 
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -26,7 +25,12 @@ public enum ErrorEnum {
     POST_NOT_FOUND(404, "게시물을 찾을 수 없습니다."),
     POST_ALREADY_LIKED(400, "이미 좋아요를 했습니다."),
     CANNOT_LIKE_OWN_POST(400, "자신의 게시물에는 좋아요를 할 수 없습니다."),
-    LIKE_NOT_FOUND(400, "좋아요를 하지 않았습니다.");
+    LIKE_NOT_FOUND(400, "좋아요를 하지 않았습니다."),
+
+    // comment_like 관련 예외 상황 정의
+    COMMENT_NOT_FOUND(404, "댓글을 찾을 수 없습니다."),
+    COMMENT_ALREADY_LIKED(400, "이미 좋아요를 했습니다."),
+    CANNOT_LIKE_OWN_COMMENT(400, "자신의 댓글에는 좋아요를 할 수 없습니다.");
 
     int statusCode; // 예외 발생 시 반환할 HTTP 상태 코드
     String message; // 예외 메시지
