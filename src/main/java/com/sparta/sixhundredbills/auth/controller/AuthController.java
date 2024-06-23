@@ -1,5 +1,6 @@
 package com.sparta.sixhundredbills.auth.controller;
 
+import com.sparta.sixhundredbills.auth.dto.LoginRequestDto;
 import com.sparta.sixhundredbills.auth.dto.SignupRequestDto;
 import com.sparta.sixhundredbills.auth.dto.SignupResponseDto;
 import com.sparta.sixhundredbills.exception.CommonResponse;
@@ -36,6 +37,11 @@ public class AuthController {
                 .build());
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<CommonResponse<Void>> login(@Valid @RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response, HttpServletRequest request) {
+        return authService.login(loginRequestDto, response, request);
+    }
+
     // 토큰 재발급 요청을 처리하는 엔드포인트
     @GetMapping("/reissue")
     public ResponseEntity<CommonResponse<Void>> tokenReissuance() {
@@ -43,6 +49,7 @@ public class AuthController {
         return ResponseEntity.ok().body(CommonResponse.<Void>builder()
                 .msg("토큰 재발급 성공")
                 .statusCode(200)
+                .data(null)
                 .build());
     }
 
@@ -55,6 +62,7 @@ public class AuthController {
         return ResponseEntity.ok().body(CommonResponse.<Void>builder()
                 .msg("로그아웃 성공")
                 .statusCode(200)
+                .data(null)
                 .build());
     }
 }

@@ -56,12 +56,13 @@ public class UserDetailsImpl implements UserDetails {
     /**
      * 사용자의 로그인 이름을 반환한다.
      *
-     * @return 사용자의 로그인 이름
+     * @return 사용자의 이메일 (사용자의 고유 식별자로 사용)
      */
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return user.getEmail();
     }
+
 
     /**
      * 사용자 계정이 만료되지 않았는지 여부를 반환한다.
