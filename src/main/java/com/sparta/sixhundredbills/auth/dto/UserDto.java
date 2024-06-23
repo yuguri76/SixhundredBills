@@ -12,7 +12,7 @@ import com.sparta.sixhundredbills.auth.entity.Role;
 
 public class UserDto {
 
-    private String username; // 사용자의 이름을 저장하는 필드
+    private String email; // 사용자의 이름을 저장하는 필드
 
     private String password; // 사용자의 패스워드를 저장하는 필드
 
