@@ -24,6 +24,17 @@ repositories {
 }
 
 dependencies {
+
+    // Spring Boot Starter Validation: 데이터 유효성 검사를 위한 라이브러리
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    testAnnotationProcessor 'org.projectlombok:lombok' // 테스트 시 Lombok 애노테이션을 처리하기 위한 설정
+
+    // JSON 라이브러리: JSON 데이터를 처리하기 위한 라이브러리
+    implementation 'org.json:json:20230227'
+
+
+
+    implementation 'mysql:mysql-connector-java'
     // AWS S3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
@@ -48,6 +59,7 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
 
     // Spring Boot Test Starter
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
