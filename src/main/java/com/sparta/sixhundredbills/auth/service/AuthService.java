@@ -1,13 +1,12 @@
 package com.sparta.sixhundredbills.auth.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.sixhundredbills.auth.dto.LoginRequestDto;
 import com.sparta.sixhundredbills.auth.entity.User;
 import com.sparta.sixhundredbills.auth.entity.UserStatusEnum;
-import com.sparta.sixhundredbills.exception.CommonResponse;
-import com.sparta.sixhundredbills.exception.ErrorEnum;
 import com.sparta.sixhundredbills.auth.jwt.JwtUtil;
 import com.sparta.sixhundredbills.auth.repository.UserRepository;
+import com.sparta.sixhundredbills.exception.CommonResponse;
+import com.sparta.sixhundredbills.exception.ErrorEnum;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
@@ -17,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @Service // Spring에서 이 클래스를 서비스로 등록하여 관리.
 @RequiredArgsConstructor // Lombok을 사용하여 필수 생성자를 자동으로 생성.

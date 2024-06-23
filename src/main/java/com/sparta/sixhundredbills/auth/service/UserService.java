@@ -5,8 +5,10 @@ import com.sparta.sixhundredbills.auth.dto.SignupResponseDto;
 import com.sparta.sixhundredbills.auth.entity.Role;
 import com.sparta.sixhundredbills.auth.entity.User;
 import com.sparta.sixhundredbills.auth.entity.UserStatusEnum;
-import com.sparta.sixhundredbills.exception.CustomException;
 import com.sparta.sixhundredbills.auth.repository.UserRepository;
+import com.sparta.sixhundredbills.exception.CustomException;
+import com.sparta.sixhundredbills.profile.entity.PasswordList;
+import com.sparta.sixhundredbills.profile.repository.PasswordListRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ import static com.sparta.sixhundredbills.exception.ErrorEnum.BAD_DUPLICATE;
 @RequiredArgsConstructor
 public class UserService {
 
+    private final PasswordListRepository passwordListRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -43,6 +46,13 @@ public class UserService {
         // 새로운 사용자 등록
         User user = new User(email, password, name, userStatusEnum, role); // 새 사용자 객체 생성
         userRepository.save(user); // 사용자 정보 저장
+
+        // 패스워드 리스트 추가
+        PasswordList newPasswordList = PasswordList.builder()
+                .password(password)
+                .user(user)
+                .build();
+        passwordListRepository.save(newPasswordList);
 
         return new SignupResponseDto(user); // 회원 가입 성공을 나타내는 응답 DTO 생성하여 반환
     }

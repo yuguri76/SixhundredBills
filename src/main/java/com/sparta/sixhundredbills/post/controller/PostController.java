@@ -1,7 +1,6 @@
 package com.sparta.sixhundredbills.post.controller;
 
 
-import com.sparta.sixhundredbills.auth.entity.User;
 import com.sparta.sixhundredbills.auth.security.UserDetailsImpl;
 import com.sparta.sixhundredbills.post.dto.PostRequestDto;
 import com.sparta.sixhundredbills.post.dto.PostResponseDto;
@@ -12,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/posts")
