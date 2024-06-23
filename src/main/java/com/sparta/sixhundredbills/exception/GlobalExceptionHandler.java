@@ -5,6 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.server.ResponseStatusException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -43,12 +44,26 @@ public class GlobalExceptionHandler {
 
     /**
      * InvalidEnteredException : 잘못된 입력값이 들어왔을 때
-     * @param message
+     * @param e : InvalidEnteredException 예외 발생 메시지
      * @return : 400 에러와 오류 메시지 반환
      * */
     @ExceptionHandler(InvalidEnteredException.class)
-    public ResponseEntity<String> invalidEnteredException(String message) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+    public ResponseEntity<CommonResponse<Void>> invalidEnteredException(InvalidEnteredException e) {
+        CommonResponse<Void> response = CommonResponse.<Void>builder()
+                .msg(e.getMessage())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    /**
+     * ResponseStatusException 예외 처리
+     * @param  e (HttpStatusCode status, String reason)
+     * @return ResponseStatusException 이 호출될 때 사용된 메시지와 상태코드를 반환
+     * */
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<String> handleResponseStatusException(ResponseStatusException e) {
+        return new ResponseEntity<>(e.getReason(), e.getStatusCode());
     }
 
 }
