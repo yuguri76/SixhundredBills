@@ -19,4 +19,5 @@ public class ProfileResponseDto {  // 응답
                 .name(user.getName())
                 .build();
     }
+
 }

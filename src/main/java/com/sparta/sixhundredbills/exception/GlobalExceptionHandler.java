@@ -48,8 +48,12 @@ public class GlobalExceptionHandler {
      * @return : 400 에러와 오류 메시지 반환
      * */
     @ExceptionHandler(InvalidEnteredException.class)
-    public ResponseEntity<String> invalidEnteredException(InvalidEnteredException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    public ResponseEntity<CommonResponse<Void>> invalidEnteredException(InvalidEnteredException e) {
+        CommonResponse<Void> response = CommonResponse.<Void>builder()
+                .msg(e.getMessage())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     /**

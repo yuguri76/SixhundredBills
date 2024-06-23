@@ -39,4 +39,5 @@ public class ProfileController {
         ProfileResponseDto responseDto = profileService.updateProfile(userDetails.getUser(), profileRequestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
+
 }
