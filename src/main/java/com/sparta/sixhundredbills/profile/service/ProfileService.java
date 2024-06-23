@@ -3,12 +3,12 @@ package com.sparta.sixhundredbills.profile.service;
 import com.sparta.sixhundredbills.auth.entity.User;
 import com.sparta.sixhundredbills.auth.repository.UserRepository;
 import com.sparta.sixhundredbills.exception.InvalidEnteredException;
-import com.sparta.sixhundredbills.exception.UnauthorizedException;
 import com.sparta.sixhundredbills.profile.dto.ProfileRequestDto;
 import com.sparta.sixhundredbills.profile.dto.ProfileResponseDto;
 import com.sparta.sixhundredbills.profile.entity.PasswordList;
 import com.sparta.sixhundredbills.profile.repository.PasswordListRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,14 +44,17 @@ public class ProfileService {
      * */
     @Transactional
     public ProfileResponseDto updateProfile(User user, ProfileRequestDto profileRequestDto) {
+        // 인증된 유저 정보 객체 생성
+        User getUser = userRepository.findByEmail(user.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("사용자가 존재하지 않습니다: "));
 
         // 현재 비밀번호와 입력받은 비밀번호가 동일한지 확인
-        if (!passwordEncoder.matches(profileRequestDto.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(profileRequestDto.getPassword(), getUser.getPassword())) {
             throw new InvalidEnteredException("현재 비밀번호와 일치하지 않습니다.");
         }
 
         // 해당 유저가 사용했던 패스워드 목록 가져오기 (최신순)
-        List<PasswordList> usePasswords = passwordListRepository.findByUserOrderByCreatedAtDesc(user);
+        List<PasswordList> usePasswords = passwordListRepository.findByUserOrderByCreatedAtDesc(getUser);
         // 입력받은 새 비밀번호가 최근 사용했던 패스워드 목록에 존재하는지 확인
         for (PasswordList passwordList : usePasswords) {
             if (passwordEncoder.matches(profileRequestDto.getNewPassword(), passwordList.getPassword())) {
@@ -71,17 +74,19 @@ public class ProfileService {
         // 3개 미만일 경우 패스워드 목록에 필요한 데이터 설정
         PasswordList newPasswordList = PasswordList.builder()
                 .password(encodedPassword)
-                .user(user)
+                .user(getUser)
                 .build();
 
         // 패스워드 목록에 추가
         passwordListRepository.save(newPasswordList);
 
+        System.out.println("password: " + getUser.getPassword());
         // 수정 요청한 유저 정보 업데이트
-        user.updateProfile(profileRequestDto, encodedPassword);
+        getUser.updateProfile(profileRequestDto, encodedPassword);
+        System.out.println("Updated password: " + getUser.getPassword());
 
         // 수정 완료된 유저 정보를 프로필 Dto 에 내용을 담아서 반환
-        return ProfileResponseDto.fromUser(user);
+        return ProfileResponseDto.fromUser(getUser);
     }
 
 }
