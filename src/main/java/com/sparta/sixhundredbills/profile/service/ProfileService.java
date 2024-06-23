@@ -32,10 +32,8 @@ public class ProfileService {
      * @return 요청한 유저의 프로필 정보
      * */
     public ProfileResponseDto getProfile(User user) {
-        // 해당 유저가 DB 에 존재하는지 확인하고 유저 정보 가져오기
-        User getUser = getUserByUsername(user.getEmail());
-        // 조회된 유저 정보를 프로필 Dto 에 필요한 내용만 담아서 반환
-        return ProfileResponseDto.fromUser(getUser);
+        // 인증된 유저 정보를 프로필 Dto 에 필요한 내용만 담아서 반환
+        return ProfileResponseDto.fromUser(user);
     }
 
     /**
@@ -46,16 +44,14 @@ public class ProfileService {
      * */
     @Transactional
     public ProfileResponseDto updateProfile(User user, ProfileRequestDto profileRequestDto) {
-        // 해당 유저가 DB 에 존재하는지 확인
-        User getUser = getUserByUsername(user.getEmail());
 
         // 현재 비밀번호와 입력받은 비밀번호가 동일한지 확인
-        if (!passwordEncoder.matches(profileRequestDto.getPassword(), getUser.getPassword())) {
+        if (!passwordEncoder.matches(profileRequestDto.getPassword(), user.getPassword())) {
             throw new InvalidEnteredException("현재 비밀번호와 일치하지 않습니다.");
         }
 
         // 해당 유저가 사용했던 패스워드 목록 가져오기 (최신순)
-        List<PasswordList> usePasswords = passwordListRepository.findByUserOrderByCreatedAtDesc(getUser);
+        List<PasswordList> usePasswords = passwordListRepository.findByUserOrderByCreatedAtDesc(user);
         // 입력받은 새 비밀번호가 최근 사용했던 패스워드 목록에 존재하는지 확인
         for (PasswordList passwordList : usePasswords) {
             if (passwordEncoder.matches(profileRequestDto.getNewPassword(), passwordList.getPassword())) {
@@ -75,29 +71,17 @@ public class ProfileService {
         // 3개 미만일 경우 패스워드 목록에 필요한 데이터 설정
         PasswordList newPasswordList = PasswordList.builder()
                 .password(encodedPassword)
-                .user(getUser)
+                .user(user)
                 .build();
 
         // 패스워드 목록에 추가
         passwordListRepository.save(newPasswordList);
 
         // 수정 요청한 유저 정보 업데이트
-        getUser.updateProfile(profileRequestDto, encodedPassword);
+        user.updateProfile(profileRequestDto, encodedPassword);
 
         // 수정 완료된 유저 정보를 프로필 Dto 에 내용을 담아서 반환
-        return ProfileResponseDto.fromUser(getUser);
-    }
-
-    /**
-     * 인증된 유저의 정보를 찾아오는 메서드
-     * 해당 유저가 DB 에 존재하는지 확인
-     * @param username  // 유저의 고유값
-     * @return User 객체 반환
-     * */
-    public User getUserByUsername(String email) {
-        return userRepository.findByEmail(user.getEmail()).orElseThrow(() ->
-                new UnauthorizedException("유효하지 않은 토큰입니다")
-        );
+        return ProfileResponseDto.fromUser(user);
     }
 
 }

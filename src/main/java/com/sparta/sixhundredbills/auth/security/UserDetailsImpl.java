@@ -25,9 +25,9 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     /**
-     * 게시물 및 댓글파트에서 사용자 정보 가져오려면 필수불가결합니다!
-     * 추가하였습니다 - 유규리
-     * 기존 주석 처리된 getUser() 메서드 삭제하고 이동시켰습니다 - 박민영
+     * 사용자 정보를 반환하는 메서드
+     *
+     * @return user 객체의 정보
      */
     public User getUser() {
         return user;
@@ -62,7 +62,6 @@ public class UserDetailsImpl implements UserDetails {
     public String getUsername() {
         return user.getEmail();
     }
-
 
     /**
      * 사용자 계정이 만료되지 않았는지 여부를 반환한다.

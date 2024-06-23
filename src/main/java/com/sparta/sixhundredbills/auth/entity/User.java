@@ -94,11 +94,6 @@ public class User extends TimeStamp {
         this.refreshToken = refreshToken;
     }
 
-    // 매개변수로 전달된 newPassword 값을 사용하여 User 객체의 비밀번호 필드인 password 를 업뎃.
-    public void setPassword(String newPassword) {
-        this.password = newPassword;
-    }
-
     // 사용자 정보 업데이트 메서드
     public void updateProfile(ProfileRequestDto user, String newPassword) {
         this.name = user.getName();
