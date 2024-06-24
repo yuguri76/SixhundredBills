@@ -20,6 +20,10 @@ public enum ErrorEnum {
     EXPIRED_TOKEN_VALUE(403, "토큰이 만료되었습니다, 재발급이 필요합니다"),
     USER_NOT_FOUND(400, "등록되지 않은 사용자입니다."),
     BAD_PASSWORD(400, "비밀번호를 확인해주세요"),
+    NOT_LOGIN(401, "로그인이 필요한 서비스입니다"),
+
+    // post 관련 예외 상황 정의
+    NOT_ROLE(401, "작성자 또는 관리자만 수정할 수 있습니다."),
 
     // post_like 관련 예외 상황 정의
     POST_NOT_FOUND(404, "게시물을 찾을 수 없습니다."),

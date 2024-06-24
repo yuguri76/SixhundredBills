@@ -9,6 +9,7 @@ import com.sparta.sixhundredbills.comment.dto.CommentRequestDto;
 import com.sparta.sixhundredbills.comment.dto.CommentResponseDto;
 import com.sparta.sixhundredbills.comment.entity.Comment;
 import com.sparta.sixhundredbills.comment.repository.CommentRepository;
+import com.sparta.sixhundredbills.exception.ErrorEnum;
 import com.sparta.sixhundredbills.exception.NotFoundCommentException;
 import com.sparta.sixhundredbills.exception.NotFoundPostException;
 import com.sparta.sixhundredbills.exception.UnauthorizedException;
@@ -116,7 +117,7 @@ public class CommentService {
         User user = userDetails.getUser();
 
         if (!comment.getUser().getId().equals(user.getId()) && !user.getRole().equals(Role.ADMIN.name())) {
-            throw new UnauthorizedException("작성자 또는 관리자만 수정할 수 있습니다.");
+            throw new UnauthorizedException(ErrorEnum.NOT_ROLE);
         }
 
         comment.updateComment(requestDto, user, post);
@@ -153,7 +154,7 @@ public class CommentService {
         User user = userDetails.getUser();
 
         if (!comment.getUser().getId().equals(user.getId()) && !user.getRole().equals(Role.ADMIN.name())) {
-            throw new UnauthorizedException("작성자 또는 관리자만 삭제할 수 있습니다.");
+            throw new UnauthorizedException(ErrorEnum.NOT_ROLE);
         }
 
         // 하위 댓글 삭제

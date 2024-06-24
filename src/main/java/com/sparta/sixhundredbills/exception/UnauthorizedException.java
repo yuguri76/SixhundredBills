@@ -1,11 +1,19 @@
 package com.sparta.sixhundredbills.exception;
 
 public class UnauthorizedException extends RuntimeException {
-    public UnauthorizedException(String message) {
-        super(message);
+    private final ErrorEnum errorEnum;
+
+    public UnauthorizedException(ErrorEnum errorEnum) {
+        super(errorEnum.getMessage());
+        this.errorEnum = errorEnum;
     }
 
-    public UnauthorizedException(String message, Throwable cause) {
-        super(message, cause);
+    public UnauthorizedException(ErrorEnum errorEnum, Throwable cause) {
+        super(errorEnum.getMessage(), cause);
+        this.errorEnum = errorEnum;
+    }
+
+    public ErrorEnum getErrorEnum() {
+        return errorEnum;
     }
 }

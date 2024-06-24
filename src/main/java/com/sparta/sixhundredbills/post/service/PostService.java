@@ -2,6 +2,7 @@ package com.sparta.sixhundredbills.post.service;
 
 import com.sparta.sixhundredbills.auth.entity.User;
 import com.sparta.sixhundredbills.auth.entity.Role;
+import com.sparta.sixhundredbills.exception.ErrorEnum;
 import com.sparta.sixhundredbills.exception.NotFoundPostException;
 import com.sparta.sixhundredbills.exception.UnauthorizedException;
 import com.sparta.sixhundredbills.post.dto.PostRequestDto;
@@ -79,7 +80,7 @@ public class PostService {
         System.out.println("현재 사용자의 역할: " + role);
 
         if (!post.getUser().getId().equals(user.getId()) && !Role.ADMIN.name().equals(role)) {
-            throw new UnauthorizedException("작성자 또는 관리자만 수정할 수 있습니다.");
+            throw new UnauthorizedException(ErrorEnum.NOT_ROLE);
         }
 
         if (!postRequestDto.isValidCategory()) {
@@ -107,7 +108,7 @@ public class PostService {
         System.out.println("현재 사용자의 역할: " + role); // 디버깅용
 
         if (!post.getUser().getId().equals(user.getId()) && !Role.ADMIN.name().equals(role)) {
-            throw new UnauthorizedException("작성자 또는 관리자만 삭제할 수 있습니다.");
+            throw new UnauthorizedException(ErrorEnum.NOT_ROLE);
         }
 
         // 관련된 post_like 레코드 삭제
