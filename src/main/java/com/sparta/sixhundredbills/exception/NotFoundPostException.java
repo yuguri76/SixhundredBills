@@ -1,11 +1,15 @@
 package com.sparta.sixhundredbills.exception;
 
 public class NotFoundPostException extends RuntimeException {
-    public NotFoundPostException() {
-        super("해당 게시물은 존재하지 않습니다.");
+    private final ErrorEnum errorEnum;
+
+    public ErrorEnum getErrorEnum() {
+        return errorEnum;
     }
 
-    public NotFoundPostException(String message) {
-        super(message);
+    public NotFoundPostException(ErrorEnum errorEnum) {
+        super(errorEnum.getMessage());
+        this.errorEnum = errorEnum;
     }
+
 }

@@ -26,6 +26,11 @@ public enum ErrorEnum {
 
     // post 관련 예외 상황 정의
     NOT_ROLE(401, "작성자 또는 관리자만 수정할 수 있습니다."),
+    NOT_POST(400, "해당 게시물은 존재하지 않습니다."),
+    NOT_CATEGORY(400, "카테고리에 일상공유, 고민상담, 익명토론 중 하나를 입력해주세요."),
+
+    // comment 관련 예외 상황 정의
+    NOT_COMMENT(400, "해당 댓글은 존재하지 않습니다."),
 
     // post_like 관련 예외 상황 정의
     POST_NOT_FOUND(404, "게시물을 찾을 수 없습니다."),
