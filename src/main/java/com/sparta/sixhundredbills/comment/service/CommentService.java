@@ -12,29 +12,24 @@ import com.sparta.sixhundredbills.exception.NotFoundPostException;
 import com.sparta.sixhundredbills.exception.UnauthorizedException;
 import com.sparta.sixhundredbills.post.entity.Post;
 import com.sparta.sixhundredbills.post.repository.PostRepository;
-import com.sparta.sixhundredbills.post.service.PostService;
 import com.sparta.sixhundredbills.util.AnonymousNameGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CommentService {
 
-    @Autowired
-    CommentRepository commentRepository;
-    @Autowired
-    PostRepository postRepository;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-
-    private PostService postService;
+    private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
     // 댓글 생성
     public CommentResponseDto createComment(Long postId, Long parentCommentId, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
@@ -71,19 +66,15 @@ public class CommentService {
 
     // 게시물별 댓글 조회
     public List<CommentResponseDto> getComments(Long postId, int page, int size, String sortBy) {
-        Post post = postService.findPostById(postId);
+        Post post = postRepository.findById(postId).orElseThrow(NotFoundPostException::new);
         Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
 
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<CommentResponseDto> CommentPage = commentRepository.findAllByPost(post, pageable).map(
-                // List<Comment> [comment1, comment2, comment3]
                 comment -> CommentResponseDto.builder()
                         .comment(comment.getComment())
                         .showName(comment.getShowName())
                         .build()
-                // CommentResponseDto::new
-                // new CommentResponseDto(Comment)
-                // Comment -> CommentResponseDto
         );
         List<CommentResponseDto> responseDtoList = CommentPage.getContent();
 
@@ -95,7 +86,7 @@ public class CommentService {
 
     // 댓글 수정
     public CommentResponseDto updateComment(Long postId, Long commentId, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
-        Post post = postService.findPostById(postId);
+        Post post = postRepository.findById(postId).orElseThrow(NotFoundPostException::new);
         Comment comment = findByCommentId(commentId);
         User user = userDetails.getUser();
 
@@ -119,8 +110,9 @@ public class CommentService {
     }
 
     // 댓글 삭제
+    @Transactional
     public String deleteComment(Long postId, Long commentId, UserDetailsImpl userDetails) {
-        Post post = postService.findPostById(postId);
+        Post post = postRepository.findById(postId).orElseThrow(NotFoundPostException::new);
         Comment comment = findByCommentId(commentId);
         User user = userDetails.getUser();
 
@@ -128,7 +120,17 @@ public class CommentService {
             throw new UnauthorizedException("작성자만 삭제할 수 있습니다.");
         }
 
+        // 하위 댓글 삭제
+        deleteChildComments(comment);
+
         commentRepository.delete(comment);
         return "댓글이 삭제되었습니다.";
+    }
+
+    private void deleteChildComments(Comment parentComment) {
+        for (Comment childComment : parentComment.getChildrenComment()) {
+            deleteChildComments(childComment);
+            commentRepository.delete(childComment);
+        }
     }
 }

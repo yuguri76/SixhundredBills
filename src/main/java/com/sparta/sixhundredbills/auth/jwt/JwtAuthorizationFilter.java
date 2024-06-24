@@ -1,5 +1,6 @@
 package com.sparta.sixhundredbills.auth.jwt;
 
+import com.sparta.sixhundredbills.auth.security.UserDetailsImpl;
 import com.sparta.sixhundredbills.auth.security.UserDetailsServiceImpl;
 import com.sparta.sixhundredbills.auth.service.AuthService;
 import com.sparta.sixhundredbills.exception.ErrorEnum;
@@ -107,6 +108,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         // 보안 컨텍스트 홀더에 설정된 보안 컨텍스트 저장
         SecurityContextHolder.setContext(context);
+
+        // 사용자 역할 로깅
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        String role = userDetails.getUser().getRole();
+        System.out.println("현재 사용자의 역할: " + role);
     }
 
     /**
