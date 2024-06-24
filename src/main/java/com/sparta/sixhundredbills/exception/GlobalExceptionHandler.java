@@ -2,6 +2,8 @@ package com.sparta.sixhundredbills.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -16,6 +18,24 @@ public class GlobalExceptionHandler {
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .build();
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * MethodArgumentNotValidException : @Valid or @Validated 유효성 검사 수행 시 발생
+     *
+     * @return 400 에러와 첫번째 오류 메시지를 우선적으로 반환
+     * */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<CommonResponse<Void>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        // 첫 번째 오류 메시지만 추출
+        FieldError fieldError = ex.getBindingResult().getFieldError();
+        String errorMessage = fieldError != null ? fieldError.getDefaultMessage() : "Validation Error";
+
+        CommonResponse<Void> response = CommonResponse.<Void>builder()
+                .msg(errorMessage)
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     /**
