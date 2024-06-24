@@ -7,6 +7,8 @@ import com.sparta.sixhundredbills.auth.jwt.JwtUtil;
 import com.sparta.sixhundredbills.auth.repository.UserRepository;
 import com.sparta.sixhundredbills.exception.CommonResponse;
 import com.sparta.sixhundredbills.exception.ErrorEnum;
+import com.sparta.sixhundredbills.exception.InvalidEnteredException;
+import com.sparta.sixhundredbills.exception.NotRoleException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
@@ -14,8 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 
 @Service // Spring에서 이 클래스를 서비스로 등록하여 관리.
 @RequiredArgsConstructor // Lombok을 사용하여 필수 생성자를 자동으로 생성.
@@ -29,17 +29,17 @@ public class AuthService {
     @Transactional // 트랜잭션 처리를 위한 어노테이션
     public ResponseEntity<CommonResponse<Void>> login(LoginRequestDto loginRequestDto, HttpServletResponse response, HttpServletRequest request) {
         User user = userRepository.findByEmail(loginRequestDto.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+                .orElseThrow(() -> new InvalidEnteredException(ErrorEnum.BAD_LOGIN_VALUE));
 
         // 사용자명을 기반으로 사용자 정보를 데이터베이스에서 조회.
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Invalid email or password");
+            throw new InvalidEnteredException(ErrorEnum.BAD_LOGIN_VALUE);
         }
 
         // 사용자 상태가 USER_RESIGN인 경우 로그인을 허용 X.
         if (user.getUserStatus().equals(UserStatusEnum.USER_RESIGN)){
-            request.setAttribute("test", ErrorEnum.BAD_RESIGN);
-            throw new IllegalArgumentException("Invalid email or password");
+//            request.setAttribute("test", ErrorEnum.BAD_RESIGN);
+            throw new NotRoleException(ErrorEnum.BAD_RESIGN);
         }
 
         // Refresh Token 생성 및 쿠키에 저장
@@ -63,12 +63,12 @@ public class AuthService {
     }
 
     // Access Token 재발급 처리 메서드
-    public String tokenReissuance(String refreshToken, HttpServletResponse res) throws IOException {
+    public String tokenReissuance(String refreshToken, HttpServletResponse res) {
         // Refresh Token으로부터 사용자명을 추출.
         String email = String.valueOf(jwtUtil.getUserInfoFromToken(refreshToken).getSubject());
 
         // 데이터베이스에서 해당 사용자를 조회합니다. 사용자가 존재하지 않으면 예외를 발생.
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException());
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new InvalidEnteredException(ErrorEnum.USER_NOT_FOUND));
 
         // 데이터베이스에 저장된 Refresh Token과 입력된 Refresh Token을 비교하여 일치 여부를 확인.
         String storedRefreshToken = jwtUtil.substringToken(user.getRefreshToken());
@@ -92,7 +92,7 @@ public class AuthService {
 
         // 데이터베이스에서 해당 사용자를 조회합니다. 사용자가 존재하지 않으면 예외를 발생.
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new InvalidEnteredException(ErrorEnum.USER_NOT_FOUND));
 
         // 사용자의 Refresh Token을 삭제하여 로그아웃 처리.
         jwtUtil.initJwtCookie(response); // 쿠키 초기화

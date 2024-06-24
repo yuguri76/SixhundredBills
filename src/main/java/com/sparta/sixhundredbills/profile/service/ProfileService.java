@@ -2,6 +2,7 @@ package com.sparta.sixhundredbills.profile.service;
 
 import com.sparta.sixhundredbills.auth.entity.User;
 import com.sparta.sixhundredbills.auth.repository.UserRepository;
+import com.sparta.sixhundredbills.exception.ErrorEnum;
 import com.sparta.sixhundredbills.exception.InvalidEnteredException;
 import com.sparta.sixhundredbills.profile.dto.ProfileRequestDto;
 import com.sparta.sixhundredbills.profile.dto.ProfileResponseDto;
@@ -50,7 +51,7 @@ public class ProfileService {
 
         // 현재 비밀번호와 입력받은 비밀번호가 동일한지 확인
         if (!passwordEncoder.matches(profileRequestDto.getPassword(), getUser.getPassword())) {
-            throw new InvalidEnteredException("현재 비밀번호와 일치하지 않습니다.");
+            throw new InvalidEnteredException(ErrorEnum.BAD_PASSWORD);
         }
 
         // 해당 유저가 사용했던 패스워드 목록 가져오기 (최신순)
@@ -58,7 +59,7 @@ public class ProfileService {
         // 입력받은 새 비밀번호가 최근 사용했던 패스워드 목록에 존재하는지 확인
         for (PasswordList passwordList : usePasswords) {
             if (passwordEncoder.matches(profileRequestDto.getNewPassword(), passwordList.getPassword())) {
-                throw new InvalidEnteredException("새로운 비밀번호는 현재 비밀번호 및 최근 사용한 비밀번호와 달라야 합니다.");
+                throw new InvalidEnteredException(ErrorEnum.BAD_PASSWORD_LIST);
             }
         }
 

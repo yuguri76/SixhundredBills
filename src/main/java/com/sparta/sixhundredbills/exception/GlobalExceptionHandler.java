@@ -2,9 +2,10 @@ package com.sparta.sixhundredbills.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.server.ResponseStatusException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -20,22 +21,69 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * MethodArgumentNotValidException : @Valid or @Validated 유효성 검사 수행 시 발생
+     *
+     * @return 400 에러와 첫번째 오류 메시지를 우선적으로 반환
+     * */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<CommonResponse<Void>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        // 첫 번째 오류 메시지만 추출
+        FieldError fieldError = ex.getBindingResult().getFieldError();
+        String errorMessage = fieldError != null ? fieldError.getDefaultMessage() : "Validation Error";
+
+        CommonResponse<Void> response = CommonResponse.<Void>builder()
+                .msg(errorMessage)
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * InvalidEnteredException : 잘못된 입력값이 들어왔을 때
+     * @param e : InvalidEnteredException 예외 발생 메시지
+     * @return : 400 에러와 오류 메시지 반환
+     */
+    @ExceptionHandler(InvalidEnteredException.class)
+    public ResponseEntity<CommonResponse<Void>> handleInvalidEnteredException(InvalidEnteredException e) {
+        CommonResponse<Void> response = CommonResponse.<Void>builder()
+                .msg(e.getMessage())
+                .statusCode(e.getErrorEnum().statusCode)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
      * 유효하지 않은 토큰
-     * @param e
+     *
      * @return : 401 에러와 오류 메시지 반환
      */
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<CommonResponse<Void>> handleInvalidTokenException(UnauthorizedException e) {
         CommonResponse<Void> response = CommonResponse.<Void>builder()
                 .msg(e.getMessage())
-                .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .statusCode(e.getErrorEnum().statusCode)
                 .build();
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
     /**
+     * NotRoleException : 해당 사용자가 권한이 없을 때
+     *
+     * @return : 403 에러와 오류 메시지 반환
+     */
+    @ExceptionHandler(NotRoleException.class)
+    public ResponseEntity<CommonResponse<Void>> handleNotRoleException(NotRoleException e) {
+        CommonResponse<Void> response = CommonResponse.<Void>builder()
+                .msg(e.getMessage())
+                .statusCode(e.getErrorEnum().statusCode)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    }
+
+
+    /**
      * InfoNotCorrectedException: 유저정보가 맞지 않을때
-     * @param e
+     *
      * @return
      */
     @ExceptionHandler(InfoNotCorrectedException.class)
@@ -55,8 +103,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NotFoundPostException.class)
     public ResponseEntity<CommonResponse<Void>> handleNotFoundPostException(NotFoundPostException e) {
         CommonResponse<Void> response = CommonResponse.<Void>builder()
-                .msg("해당 게시물은 존재하지 않습니다.")
-                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .msg(e.getMessage())
+                .statusCode(e.getErrorEnum().statusCode)
                 .build();
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
@@ -70,36 +118,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<CommonResponse<Void>> handleNotFoundCommentException(NotFoundCommentException e) {
         CommonResponse<Void> response = CommonResponse.<Void>builder()
                 .msg(e.getMessage())
-                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .statusCode(e.getErrorEnum().statusCode)
                 .build();
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-    /**
-     * InvalidEnteredException : 잘못된 입력값이 들어왔을 때
-     * @param e : InvalidEnteredException 예외 발생 메시지
-     * @return : 400 에러와 오류 메시지 반환
-     */
-    @ExceptionHandler(InvalidEnteredException.class)
-    public ResponseEntity<CommonResponse<Void>> handleInvalidEnteredException(InvalidEnteredException e) {
-        CommonResponse<Void> response = CommonResponse.<Void>builder()
-                .msg(e.getMessage())
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-    /**
-     * ResponseStatusException 예외 처리
-     * @param e (HttpStatusCode status, String reason)
-     * @return ResponseStatusException 이 호출될 때 사용된 메시지와 상태코드를 반환
-     */
-    @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<CommonResponse<Void>> handleResponseStatusException(ResponseStatusException e) {
-        CommonResponse<Void> response = CommonResponse.<Void>builder()
-                .msg(e.getReason())
-                .statusCode(e.getStatusCode().value())
-                .build();
-        return new ResponseEntity<>(response, e.getStatusCode());
     }
 }

@@ -27,10 +27,6 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<PostResponseDto> createPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        if (userDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        }
-
         PostResponseDto responseDto = postService.createPost(postRequestDto, userDetails.getUser());
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
@@ -56,9 +52,6 @@ public class PostController {
      */
     @PutMapping("/{postId}")
     public ResponseEntity<PostResponseDto> updatePost(@PathVariable Long postId, @RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        if (userDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        }
         PostResponseDto responseDto = postService.updatePost(postId, postRequestDto, userDetails.getUser());
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
@@ -71,9 +64,6 @@ public class PostController {
      */
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        if (userDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        }
         postService.deletePost(postId, userDetails.getUser());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

@@ -1,6 +1,5 @@
 package com.sparta.sixhundredbills.comment.service;
 
-import com.amazonaws.services.kms.model.NotFoundException;
 import com.sparta.sixhundredbills.auth.entity.Role;
 import com.sparta.sixhundredbills.auth.entity.User;
 import com.sparta.sixhundredbills.auth.repository.UserRepository;
@@ -9,11 +8,12 @@ import com.sparta.sixhundredbills.comment.dto.CommentRequestDto;
 import com.sparta.sixhundredbills.comment.dto.CommentResponseDto;
 import com.sparta.sixhundredbills.comment.entity.Comment;
 import com.sparta.sixhundredbills.comment.repository.CommentRepository;
+import com.sparta.sixhundredbills.exception.ErrorEnum;
 import com.sparta.sixhundredbills.exception.NotFoundCommentException;
 import com.sparta.sixhundredbills.exception.NotFoundPostException;
 import com.sparta.sixhundredbills.exception.UnauthorizedException;
 import com.sparta.sixhundredbills.post.entity.Post;
-import com.sparta.sixhundredbills.post.repository.PostRepository;
+import com.sparta.sixhundredbills.post.service.PostService;
 import com.sparta.sixhundredbills.util.AnonymousNameGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -30,8 +30,8 @@ import java.util.List;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final PostService postService;
 
     /**
      * 댓글 생성
@@ -44,13 +44,13 @@ public class CommentService {
     // 댓글 생성
     public CommentResponseDto createComment(Long postId, Long parentCommentId, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
         // postId로 게시물 찾기 -> 그 게시물이 없을 경우 예외처리
-        Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundPostException("해당 게시물은 존재하지 않습니다."));
+        Post post = postService.findPostById(postId);
         // 익명 닉네임 생성
         String showName = AnonymousNameGenerator.generate();
         Comment parentComment = null;
         if (parentCommentId != null) {
             parentComment = commentRepository.findById(parentCommentId)
-                    .orElseThrow(() -> new NotFoundCommentException("해당 댓글은 존재하지 않습니다."));
+                    .orElseThrow(() -> new NotFoundCommentException(ErrorEnum.NOT_COMMENT));
         }
 
         // 댓글 Entity 를 DB에 저장하기
@@ -83,7 +83,7 @@ public class CommentService {
      * @return 조회된 댓글의 응답 데이터 리스트
      */
     public List<CommentResponseDto> getComments(Long postId, int page, int size, String sortBy) {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundPostException("해당 게시물은 존재하지 않습니다."));
+        Post post = postService.findPostById(postId);
         Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
 
         Pageable pageable = PageRequest.of(page, size, sort);
@@ -96,7 +96,7 @@ public class CommentService {
         List<CommentResponseDto> responseDtoList = CommentPage.getContent();
 
         if (responseDtoList.isEmpty()) {
-            throw new NotFoundPostException("해당 게시물은 존재하지 않습니다.");
+            throw new NotFoundPostException(ErrorEnum.NOT_POST);
         }
         return responseDtoList;
     }
@@ -111,12 +111,12 @@ public class CommentService {
      */
     // 댓글 수정
     public CommentResponseDto updateComment(Long postId, Long commentId, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundPostException("해당 게시물은 존재하지 않습니다."));
+        Post post = postService.findPostById(postId);
         Comment comment = findByCommentId(commentId);
         User user = userDetails.getUser();
 
         if (!comment.getUser().getId().equals(user.getId()) && !user.getRole().equals(Role.ADMIN.name())) {
-            throw new UnauthorizedException("작성자 또는 관리자만 수정할 수 있습니다.");
+            throw new UnauthorizedException(ErrorEnum.NOT_ROLE);
         }
 
         comment.updateComment(requestDto, user, post);
@@ -136,7 +136,7 @@ public class CommentService {
      */
     public Comment findByCommentId(Long commentId) {
         return commentRepository.findById(commentId)
-                .orElseThrow(() -> new NotFoundCommentException("해당 댓글은 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundCommentException(ErrorEnum.NOT_COMMENT));
     }
 
     /**
@@ -148,12 +148,12 @@ public class CommentService {
      */
     @Transactional
     public String deleteComment(Long postId, Long commentId, UserDetailsImpl userDetails) {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundPostException("해당 게시물은 존재하지 않습니다."));
+        Post post = postService.findPostById(postId);
         Comment comment = findByCommentId(commentId);
         User user = userDetails.getUser();
 
         if (!comment.getUser().getId().equals(user.getId()) && !user.getRole().equals(Role.ADMIN.name())) {
-            throw new UnauthorizedException("작성자 또는 관리자만 삭제할 수 있습니다.");
+            throw new UnauthorizedException(ErrorEnum.NOT_ROLE);
         }
 
         // 하위 댓글 삭제

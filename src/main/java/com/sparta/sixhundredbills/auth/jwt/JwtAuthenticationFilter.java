@@ -9,6 +9,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -98,18 +99,35 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     // 인증이 실패한 경우 호출
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
+        // 에러 응답을 위한 기본 설정
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("UTF-8");
+
+        // ErrorEnum 주입
+        ErrorEnum errorEnum;
+
         // 인증 실패 예외에 따라 처리
         if (failed instanceof InternalAuthenticationServiceException) {
-            request.setAttribute("USER_NOT_FOUND", ErrorEnum.USER_NOT_FOUND);
-            throw new IllegalArgumentException();
+            errorEnum = ErrorEnum.USER_NOT_FOUND;
         } else if (failed instanceof BadCredentialsException) {
-            request.setAttribute("BAD_PASSWORD", ErrorEnum.BAD_PASSWORD);
-            throw new IllegalArgumentException();
+            errorEnum = ErrorEnum.BAD_LOGIN_VALUE;
+        } else {
+            errorEnum = ErrorEnum.NOT_VALID_TOKEN; // 기본 예외 처리
         }
 
-        // HTTP 응답 상태 설정 (401 Unauthorized)
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        // HTTP 응답 상태 설정
+        response.setStatus(errorEnum.getStatusCode());
+
+        // CommonResponse 객체 생성
+        CommonResponse errorResponse = new CommonResponse(errorEnum.getMessage(), errorEnum.getStatusCode());
+
+        // JSON 형식으로 응답 메시지 작성
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonResponse = objectMapper.writeValueAsString(errorResponse);
+
+        // 응답에 JSON 메시지 작성
+        response.getWriter().write(jsonResponse);
     }
 
     /**
