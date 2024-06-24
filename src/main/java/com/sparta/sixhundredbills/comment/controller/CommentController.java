@@ -24,9 +24,9 @@ public class CommentController {
 
     /**
      * 댓글 생성
-     * @param postId 로 post 조회
-     * @param requestDto 로 필요한 정보 입수
-     * @param userDetails 에서 user 정보 입수
+     * @param postId 게시물 ID
+     * @param requestDto 생성할 댓글 정보
+     * @param userDetails 인증된 사용자 정보
      * @return 생성된 댓글의 응답 데이터
      */
     @PostMapping("/{postId}/comments")
@@ -40,14 +40,15 @@ public class CommentController {
         } else {
             responseDto = commentService.createComment(postId, parentCommentId, requestDto, userDetails);
         }
-//        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     /**
      * 댓글 조회
-     * @param postId 로 post 조회
-     * @param page size sortBy 로 페이지네이션
+     * @param postId 게시물 ID
+     * @param page 페이지 번호
+     * @param size 페이지 크기
+     * @param sortBy 정렬 기준
      * @return 조회된 댓글의 응답 데이터
      */
     @GetMapping("/{postId}/comments")
@@ -61,10 +62,10 @@ public class CommentController {
 
     /**
      * 댓글 수정
-     * @param postId 로 post 조회
-     * @param commentId 로 comment 조회
-     * @param requestDto 로 필요한 정보 입수
-     * @param userDetails 에서 user 정보 입수
+     * @param postId 게시물 ID
+     * @param commentId 댓글 ID
+     * @param requestDto 수정할 댓글 정보
+     * @param userDetails 인증된 사용자 정보
      * @return 수정된 댓글의 응답 데이터
      */
     @PutMapping("/{postId}/comments/{commentId}")
@@ -73,17 +74,14 @@ public class CommentController {
                                                             @RequestBody CommentRequestDto requestDto,
                                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         CommentResponseDto responseDto = commentService.updateComment(postId, commentId, requestDto, userDetails);
-        //        return new ResponseEntity<>(responseDto, HttpStatus.OK);
         return ResponseEntity.ok(responseDto);
-//        return ResponseEntity.badRequest().body(responseDto);
-//        return ResponseEntity.status(HttpStatus.MULTI_STATUS).body(responseDto);
     }
 
     /**
      * 댓글 삭제
-     * @param postId 로 post 조회
-     * @param commentId 로 comment 조회
-     * @param userDetails 에서 user 정보 입수
+     * @param postId 게시물 ID
+     * @param commentId 댓글 ID
+     * @param userDetails 인증된 사용자 정보
      * @return 삭제된 댓글의 응답 데이터
      */
     @DeleteMapping("/{postId}/comments/{commentId}")

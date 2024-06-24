@@ -41,6 +41,13 @@ public class Comment extends TimeStamp {
     private String showName;
     private String comment;
 
+    /**
+     * Comment 생성자
+     * @param post 댓글이 달린 게시물
+     * @param user 댓글 작성자
+     * @param showName 익명으로 표시될 이름
+     * @param comment 댓글 내용
+     */
     @Builder
     public Comment(Post post, User user, String showName, String comment) {
         this.post = post;
@@ -49,6 +56,12 @@ public class Comment extends TimeStamp {
         this.comment = comment;
     }
 
+    /**
+     * 댓글 수정
+     * @param requestDto 수정할 댓글 정보
+     * @param user 댓글 작성자
+     * @param post 댓글이 달린 게시물
+     */
     public void updateComment(CommentRequestDto requestDto, User user, Post post) {
         this.user = user;
         this.post = post;
