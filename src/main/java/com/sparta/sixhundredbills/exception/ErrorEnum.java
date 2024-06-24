@@ -14,10 +14,14 @@ public enum ErrorEnum {
     BAD_RESIGN(403, "이미 탈퇴한 회원입니다."),
     BAD_DUPLICATE(400, "중복되거나 탈퇴한 사용자가 존재합니다."),
 
-    // authorization 관련 예외 상황 정의
-    NOT_VALID_TOKEN(400, "유효하지 않은 토큰입니다"),
+    // Token 관련 예외 상황 정의
+    NOT_TOKEN(401,"토큰이 존재하지 않습니다."),
+    NOT_VALID_TOKEN(401, "유효하지 않은 토큰입니다."),
     EXPIRED_REFRESH_TOKEN_VALUE(403, "리프레시 토큰이 만료되었습니다, 재로그인이 필요합니다"),
     EXPIRED_TOKEN_VALUE(403, "토큰이 만료되었습니다, 재발급이 필요합니다"),
+    BESIDES_TOKEN(500, "토큰 유효성 검증 오류 입니다."),
+
+    // authorization 관련 예외 상황 정의
     USER_NOT_FOUND(400, "등록되지 않은 사용자입니다."),
     BAD_PASSWORD(400, "현재 비밀번호와 일치하지 않습니다."),
     BAD_PASSWORD_LIST(400, "새로운 비밀번호는 현재 비밀번호 및 최근 사용한 비밀번호와 달라야 합니다."),

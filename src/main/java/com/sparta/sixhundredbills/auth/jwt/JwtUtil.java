@@ -1,6 +1,7 @@
 package com.sparta.sixhundredbills.auth.jwt;
 
 import com.sparta.sixhundredbills.exception.ErrorEnum;
+import com.sparta.sixhundredbills.exception.UnauthorizedException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -162,7 +163,7 @@ public class JwtUtil {
             return tokenValue.substring(7); // "Bearer " 접두사 제거
         }
         logger.error("Not Found Token");
-        throw new NullPointerException("Not Found Token");
+        throw new UnauthorizedException(ErrorEnum.NOT_TOKEN);
     }
 
     /**
@@ -176,17 +177,17 @@ public class JwtUtil {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
         } catch (SecurityException | MalformedJwtException | SignatureException e) {
             request.setAttribute("NOT_VALID_TOKEN", ErrorEnum.NOT_VALID_TOKEN);
-            throw new RuntimeException("유효하지 않는 토큰 오류");
+            throw new UnauthorizedException(ErrorEnum.NOT_VALID_TOKEN);
         } catch (ExpiredJwtException e) {
             if (jwtTokenType.equals(JwtTokenType.ACCESS_TOKEN)) {
                 request.setAttribute("EXPIRED_TOKEN", ErrorEnum.EXPIRED_TOKEN_VALUE);
-                throw new RuntimeException("만료된 토큰 오류");
+                throw new UnauthorizedException(ErrorEnum.EXPIRED_TOKEN_VALUE);
             } else {
                 request.setAttribute("EXPIRED_TOKEN", ErrorEnum.EXPIRED_REFRESH_TOKEN_VALUE);
-                throw new RuntimeException("만료된 리프레시 토큰 오류");
+                throw new UnauthorizedException(ErrorEnum.EXPIRED_REFRESH_TOKEN_VALUE);
             }
         } catch (UnsupportedJwtException | IllegalArgumentException e) {
-            throw new RuntimeException("기타");
+            throw new UnauthorizedException(ErrorEnum.BESIDES_TOKEN);
         }
     }
 
