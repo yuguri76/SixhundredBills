@@ -1,11 +1,8 @@
 package com.sparta.sixhundredbills.auth.dto;
 
 
-import lombok.Data;
-
-
-
 import com.sparta.sixhundredbills.auth.entity.Role;
+import lombok.Data;
 
 // 클라이언트에서 전송되는 사용자 정보를 담는 DTO 클래스
 @Data
