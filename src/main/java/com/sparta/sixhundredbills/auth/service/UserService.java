@@ -6,7 +6,7 @@ import com.sparta.sixhundredbills.auth.entity.Role;
 import com.sparta.sixhundredbills.auth.entity.User;
 import com.sparta.sixhundredbills.auth.entity.UserStatusEnum;
 import com.sparta.sixhundredbills.auth.repository.UserRepository;
-import com.sparta.sixhundredbills.exception.CustomException;
+import com.sparta.sixhundredbills.exception.InvalidEnteredException;
 import com.sparta.sixhundredbills.profile.entity.PasswordList;
 import com.sparta.sixhundredbills.profile.repository.PasswordListRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ public class UserService {
 
         Optional<User> checkUsername = userRepository.findByEmail(email);
         if (checkUsername.isPresent()) {
-            throw new CustomException(BAD_DUPLICATE); // 이미 존재하는 사용자명일 경우 예외 처리
+            throw new InvalidEnteredException(BAD_DUPLICATE); // 이미 존재하는 사용자명일 경우 예외 처리
         }
 
         // 새로운 사용자 등록

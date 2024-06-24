@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public enum ErrorEnum {
     // user 관련 예외 상황 정의
-    BAD_RESIGN(400, "이미 탈퇴한 회원입니다."),
+    BAD_RESIGN(403, "이미 탈퇴한 회원입니다."),
     BAD_DUPLICATE(400, "중복되거나 탈퇴한 사용자가 존재합니다."),
 
     // authorization 관련 예외 상황 정의
@@ -19,8 +19,10 @@ public enum ErrorEnum {
     EXPIRED_REFRESH_TOKEN_VALUE(403, "리프레시 토큰이 만료되었습니다, 재로그인이 필요합니다"),
     EXPIRED_TOKEN_VALUE(403, "토큰이 만료되었습니다, 재발급이 필요합니다"),
     USER_NOT_FOUND(400, "등록되지 않은 사용자입니다."),
-    BAD_PASSWORD(400, "비밀번호를 확인해주세요"),
+    BAD_PASSWORD(400, "현재 비밀번호와 일치하지 않습니다."),
+    BAD_PASSWORD_LIST(400, "새로운 비밀번호는 현재 비밀번호 및 최근 사용한 비밀번호와 달라야 합니다."),
     NOT_LOGIN(401, "로그인이 필요한 서비스입니다"),
+    BAD_LOGIN_VALUE(400, "정확한 이메일과 비밀번호를 입력해주세요."),
 
     // post 관련 예외 상황 정의
     NOT_ROLE(401, "작성자 또는 관리자만 수정할 수 있습니다."),
