@@ -62,6 +62,20 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * 해당 댓글이 DB에 존재하지 않을 때
+     *
+     * @return : 클라이언트로 에러 코드와 메시지 반환
+     */
+    @ExceptionHandler(NotFoundCommentException.class)
+    public ResponseEntity<CommonResponse<Void>> handleNotFoundCommentException(NotFoundCommentException e) {
+        CommonResponse<Void> response = CommonResponse.<Void>builder()
+                .msg(e.getMessage())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
      * InvalidEnteredException : 잘못된 입력값이 들어왔을 때
      * @param e : InvalidEnteredException 예외 발생 메시지
      * @return : 400 에러와 오류 메시지 반환
