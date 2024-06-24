@@ -19,21 +19,29 @@ public class Post extends TimeStamp {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
-    private String showName;
-    private String content;
     private String category;
+    private String content;
+    private String showName;
+
     private int likeCount;
 
+    /**
+     * Post 생성자
+     * @param user 게시물을 작성한 사용자
+     * @param category 게시물 카테고리
+     * @param content 게시물 내용
+     * @param showName 익명으로 표시될 이름
+     * @param likeCount 좋아요 수
+     */
     @Builder
-    public Post(Long id, User user, String showName, String content, String category, int likeCount) {
-        this.id = id;
+    public Post(User user, String category, String content, String showName, int likeCount) {
         this.user = user;
-        this.showName = showName;
-        this.content = content;
         this.category = category;
+        this.content = content;
+        this.showName = showName;
         this.likeCount = likeCount;
     }
 }
