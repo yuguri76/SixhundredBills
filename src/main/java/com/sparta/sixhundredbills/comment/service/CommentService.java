@@ -1,6 +1,5 @@
 package com.sparta.sixhundredbills.comment.service;
 
-import com.amazonaws.services.kms.model.NotFoundException;
 import com.sparta.sixhundredbills.auth.entity.Role;
 import com.sparta.sixhundredbills.auth.entity.User;
 import com.sparta.sixhundredbills.auth.repository.UserRepository;
@@ -14,7 +13,6 @@ import com.sparta.sixhundredbills.exception.NotFoundCommentException;
 import com.sparta.sixhundredbills.exception.NotFoundPostException;
 import com.sparta.sixhundredbills.exception.UnauthorizedException;
 import com.sparta.sixhundredbills.post.entity.Post;
-import com.sparta.sixhundredbills.post.repository.PostRepository;
 import com.sparta.sixhundredbills.post.service.PostService;
 import com.sparta.sixhundredbills.util.AnonymousNameGenerator;
 import lombok.RequiredArgsConstructor;

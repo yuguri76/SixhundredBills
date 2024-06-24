@@ -56,17 +56,4 @@ public class UserService {
 
         return new SignupResponseDto(user); // 회원 가입 성공을 나타내는 응답 DTO 생성하여 반환
     }
-
-
-//    // 추후 필요성이 있을 시 사용 할 임시 구현 메서드(필요성 없다고 판단시 삭제 예정)
-//    // 사용자의 이메일을 기반으로 저장된 사용자의 역할을 가져오는 메서드
-//    // => 이메일로 사용자를 찾고, 그 사용자의 역할을 반환
-//    // 사용자 역할(role)을 반환하는 메서드
-//    public String getUserRole(String email) {
-//        Optional<User> optionalUser = userRepository.findByEmail(email);
-//        if (optionalUser.isPresent()) {
-//            return optionalUser.get().getRole();
-//        }
-//        throw new CustomException(USER_NOT_FOUND); // 사용자를 찾지 못한 경우 예외 처리
-//    }
 }

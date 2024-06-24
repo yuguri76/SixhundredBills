@@ -48,7 +48,6 @@ public class SecurityConfig {
         this.authServiceProvider = authServiceProvider;
     }
 
-
     /**
      * 보안 필터 체인을 설정합니다.
      *
