@@ -85,10 +85,10 @@ public class CommentController {
      * @return 삭제된 댓글의 응답 데이터
      */
     @DeleteMapping("/{postId}/comments/{commentId}")
-    public ResponseEntity<String> deleteComment(@PathVariable Long postId,
+    public ResponseEntity<Void> deleteComment(@PathVariable Long postId,
                                                 @PathVariable Long commentId,
                                                 @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        String responseDto = commentService.deleteComment(postId, commentId, userDetails);
-        return ResponseEntity.ok(responseDto);
+        commentService.deleteComment(postId, commentId, userDetails);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
