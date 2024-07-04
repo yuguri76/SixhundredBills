@@ -8,16 +8,18 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class ProfileResponseDto {  // 응답
+public class ProfileResponseDto {
     private String email;
     private String name;
+    private long likedPostsCount;
+    private long likedCommentsCount;
 
-    // User Entity 를 받아서 필요한 값만 응답하도록 설정
-    public static ProfileResponseDto fromUser(User user) {
+    public static ProfileResponseDto fromUser(User user, long likedPostsCount, long likedCommentsCount) {
         return ProfileResponseDto.builder()
                 .email(user.getEmail())
                 .name(user.getName())
+                .likedPostsCount(likedPostsCount)
+                .likedCommentsCount(likedCommentsCount)
                 .build();
     }
-
 }

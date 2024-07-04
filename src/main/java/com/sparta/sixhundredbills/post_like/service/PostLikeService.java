@@ -1,5 +1,6 @@
 package com.sparta.sixhundredbills.post_like.service;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.sixhundredbills.auth.entity.User;
 import com.sparta.sixhundredbills.exception.CustomException;
 import com.sparta.sixhundredbills.exception.ErrorEnum;
@@ -8,15 +9,13 @@ import com.sparta.sixhundredbills.post.repository.PostRepository;
 import com.sparta.sixhundredbills.post_like.dto.PostLikeResponseDto;
 import com.sparta.sixhundredbills.post_like.entity.PostLike;
 import com.sparta.sixhundredbills.post_like.repository.PostLikeRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
-/**
- * 게시물 좋아요 서비스 클래스
- */
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +23,7 @@ public class PostLikeService {
 
     private final PostLikeRepository postLikeRepository;
     private final PostRepository postRepository;
+    private final JPAQueryFactory queryFactory;
 
     @Transactional
     public PostLikeResponseDto likePost(Long postId, User user) {
@@ -47,7 +47,7 @@ public class PostLikeService {
         postLikeRepository.save(newLike);
 
         return PostLikeResponseDto.builder()
-                .message("성공적으로 좋아요를 등록했습니다")
+                .content("성공적으로 좋아요를 등록했습니다")
                 .postId(postId)
                 .userId(user.getId())
                 .likesCount(postLikeRepository.countByPostId(postId))
@@ -65,10 +65,21 @@ public class PostLikeService {
         postLikeRepository.delete(postLike);
 
         return PostLikeResponseDto.builder()
-                .message("성공적으로 좋아요를 취소했습니다")
+                .content("성공적으로 좋아요를 취소했습니다")
                 .postId(postId)
                 .userId(user.getId())
                 .likesCount(postLikeRepository.countByPostId(postId))
                 .build();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<PostLikeResponseDto> getLikedPosts(User user, Pageable pageable) {
+        Page<PostLike> likedPosts = postLikeRepository.findAllByUser(user, pageable);
+        return likedPosts.map(postLike -> PostLikeResponseDto.builder()
+                .content(postLike.getPost().getContent())  // 게시물의 내용을 content에 설정
+                .postId(postLike.getPost().getId())
+                .userId(user.getId())
+                .likesCount(postLikeRepository.countByPostId(postLike.getPost().getId()))
+                .build());
     }
 }

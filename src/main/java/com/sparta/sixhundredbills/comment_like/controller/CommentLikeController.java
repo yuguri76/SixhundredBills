@@ -5,6 +5,8 @@ import com.sparta.sixhundredbills.comment_like.dto.CommentLikeRequestDto;
 import com.sparta.sixhundredbills.comment_like.dto.CommentLikeResponseDto;
 import com.sparta.sixhundredbills.comment_like.service.CommentLikeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,7 +30,6 @@ public class CommentLikeController {
      * @param userDetails 사용자 정보
      * @return 좋아요 추가 결과를 포함한 ResponseEntity
      */
-
     @PostMapping("/{postId}/comments/{commentId}/likes")
     public ResponseEntity<Object> likeComment(@PathVariable Long postId, @PathVariable Long commentId,
                                               @RequestBody CommentLikeRequestDto commentLikeRequestDto,
@@ -90,5 +91,13 @@ public class CommentLikeController {
             // 예외 발생 시 에러 응답 반환
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
         }
+    }
+
+    // 좋아요한 댓글 조회
+    @GetMapping("/comments/likes")
+    public ResponseEntity<Page<CommentLikeResponseDto>> getLikedComments(
+            @AuthenticationPrincipal UserDetailsImpl userDetails, Pageable pageable) {
+        Page<CommentLikeResponseDto> likedComments = commentLikeService.getLikedComments(userDetails.getUser(), pageable);
+        return ResponseEntity.ok(likedComments);
     }
 }

@@ -13,4 +13,5 @@ import lombok.NoArgsConstructor;
 public class CommentResponseDto {
     private String showName; // 익명으로 표시될 이름
     private String comment;
+    private int likesCount; // 추가된 필드
 }

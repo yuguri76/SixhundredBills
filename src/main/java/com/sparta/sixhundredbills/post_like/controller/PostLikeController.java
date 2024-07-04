@@ -6,6 +6,8 @@ import com.sparta.sixhundredbills.post_like.dto.PostLikeRequestDto;
 import com.sparta.sixhundredbills.post_like.dto.PostLikeResponseDto;
 import com.sparta.sixhundredbills.post_like.service.PostLikeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -80,5 +82,13 @@ public class PostLikeController {
             // 예외 발생 시 에러 응답 반환
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
         }
+    }
+
+    //좋아요 갯수 확인
+    @GetMapping("/likes")
+    public ResponseEntity<Page<PostLikeResponseDto>> getLikedPosts(
+            @AuthenticationPrincipal UserDetailsImpl userDetails, Pageable pageable) {
+        Page<PostLikeResponseDto> likedPosts = postLikeService.getLikedPosts(userDetails.getUser(), pageable);
+        return ResponseEntity.ok(likedPosts);
     }
 }
