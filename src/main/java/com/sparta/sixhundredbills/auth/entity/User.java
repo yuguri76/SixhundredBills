@@ -12,48 +12,55 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
-
-// User 엔티티는 사용자 정보를 담는 객체로, DB의 특정 테이블과 매핑됨.
-// 필드들은 사용자 정보를 저장, 생성자와 메서드는 사용자 객체의 생성 & 동작을 정의.
-
-
-@Entity // JPA 엔티티임을 나타내는 어노테이션
-@Getter // Lombok: 모든 필드에 대한 getter 메서드 자동 생성
-@Table(name = "users") // 데이터베이스 테이블 이름 지정 - ERD에 맞게 users로 수정
-@NoArgsConstructor // Lombok: 매개변수 없는 기본 생성자 자동 생성
+/**
+ * User 엔티티 클래스
+ */
+@Entity
+@Getter
+@Table(name = "users")
+@NoArgsConstructor
 public class User extends TimeStamp {
 
-    @Id // Primary Key 설정
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 생성되는 값, MySQL의 AUTO_INCREMENT와 같음
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id; // 사용자 ID
 
-    @Column(name = "EMAIL", nullable = false, length = 50) // 데이터베이스 컬럼 설정
-    private String email; // 이메일 (사용자명)
+    @Column(name = "EMAIL", nullable = false, length = 50)
+    private String email; // 이메일
 
-    @Column(name = "PASSWORD", nullable = false, length = 60) // 데이터베이스 컬럼 설정
-    private String password; // 비밀번호
+    @Column(name = "PASSWORD", nullable = false, length = 60)
+    private String password;  // 비밀번호
 
-    @Column(name = "NAME", nullable = false, length = 40) // 데이터베이스 컬럼 설정
-    private String name; // 이름
+    @Column(name = "NAME", nullable = false, length = 40)
+    private String name; // 사용자 이름
 
-    @Column(nullable = false) // 데이터베이스 컬럼 설정
-    @Enumerated(EnumType.STRING) // Enum 타입을 문자열로 저장
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private UserStatusEnum userStatus; // 사용자 상태
 
     @Column(name = "ROLE", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Role role; // Role 필드 추가
+    private Role role; // 사용자 역할
 
-    @Column(name = "REFRESH_TOKEN", length = 255) // 데이터베이스 컬럼 설정
+    @Column(name = "REFRESH_TOKEN", length = 255)
     private String refreshToken; // 리프레시 토큰
 
-    @CreatedDate // 생성 일자 자동 생성
-    @LastModifiedDate // 마지막 수정 일자 자동 생성
-    @Temporal(TemporalType.TIMESTAMP) // 시간 타입 설정
-    @Column(name = "USER_STATUS_TIME", nullable = false) // 데이터베이스 컬럼 설정
-    private LocalDateTime userStatusTime; // 사용자 상태 변경 일시
+    @CreatedDate
+    @LastModifiedDate
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "USER_STATUS_TIME", nullable = false)
+    private LocalDateTime userStatusTime; // 사용자 상태 변경 시간
 
-    // 빌더 패턴을 적용한 생성자
+    /**
+     * User 엔티티 생성자
+     * @param email 이메일
+     * @param password 비밀번호
+     * @param name 사용자 이름
+     * @param userStatusEnum 사용자 상태
+     * @param role 사용자 역할
+     * @param refreshToken 리프레시 토큰
+     * @param userStatusTime 사용자 상태 변경 시간
+     */
     @Builder
     public User(String email, String password, String name, UserStatusEnum userStatusEnum, Role role, String refreshToken, LocalDateTime userStatusTime) {
         this.email = email;
@@ -65,7 +72,10 @@ public class User extends TimeStamp {
         this.userStatusTime = userStatusTime != null ? userStatusTime : LocalDateTime.now();
     }
 
-    // 필요한 모든 필드를 초기화하는 생성자
+    /**
+     * SignupRequestDto를 이용한 User 엔티티 생성자
+     * @param signupRequestDto 회원가입 요청 DTO
+     */
     public User(SignupRequestDto signupRequestDto) {
         this.email = signupRequestDto.getEmail();
         this.password = signupRequestDto.getPassword();
@@ -75,6 +85,14 @@ public class User extends TimeStamp {
         this.userStatusTime = LocalDateTime.now();
     }
 
+    /**
+     * User 클래스의 일반 생성자.
+     * @param email 사용자 이메일
+     * @param password 사용자 비밀번호
+     * @param name 사용자 이름
+     * @param userStatusEnum 사용자 상태
+     * @param role 사용자 역할
+     */
     public User(String email, String password, String name, UserStatusEnum userStatusEnum, Role role) {
         this.email = email;
         this.password = password;
@@ -84,19 +102,62 @@ public class User extends TimeStamp {
         this.userStatusTime = LocalDateTime.now();
     }
 
-    // 사용자의 상태에 따라 역할을 반환하는 메서드
+    /**
+     * 사용자 역할 반환 메서드.
+     * @return 사용자 역할
+     */
     public String getRole() {
         return this.role.name();
     }
 
-    // 리프레시 토큰 설정 메서드
+    /**
+     * 리프레시 토큰 설정 메서드.
+     * @param refreshToken 리프레시 토큰
+     */
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
 
-    // 사용자 정보 업데이트 메서드
+    /**
+     * 프로필 업데이트 메서드.
+     * @param user 사용자 정보 DTO
+     * @param newPassword 새로운 비밀번호
+     */
     public void updateProfile(ProfileRequestDto user, String newPassword) {
         this.name = user.getName();
         this.password = newPassword;
+    }
+
+
+    /**
+     * 사용자 ID 설정 메서드.
+     * @param id 사용자 ID
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    /**
+     * 사용자 이메일 설정 메서드.
+     * @param email 사용자 이메일
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * 사용자 비밀번호 설정 메서드.
+     * @param password 사용자 비밀번호
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    /**
+     * 사용자 이름 설정 메서드.
+     * @param name 사용자 이름
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 }

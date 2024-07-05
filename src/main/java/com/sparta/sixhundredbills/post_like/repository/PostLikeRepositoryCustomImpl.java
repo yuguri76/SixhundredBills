@@ -3,21 +3,29 @@ package com.sparta.sixhundredbills.post_like.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.sixhundredbills.auth.entity.User;
 import com.sparta.sixhundredbills.post_like.entity.PostLike;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.stereotype.Repository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 import static com.sparta.sixhundredbills.post_like.entity.QPostLike.postLike;
 
+/**
+ * PostLikeRepositoryCustom 인터페이스의 구현 클래스.
+ * QueryDSL을 사용하여 커스텀 쿼리 메서드를 정의합니다.
+ */
 @Repository
 public class PostLikeRepositoryCustomImpl implements PostLikeRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
+    /**
+     * 생성자.
+     * @param queryFactory QueryDSL을 위한 JPAQueryFactory 객체
+     */
     public PostLikeRepositoryCustomImpl(JPAQueryFactory queryFactory) {
         this.queryFactory = queryFactory;
     }

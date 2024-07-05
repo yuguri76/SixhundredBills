@@ -4,8 +4,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.sixhundredbills.auth.entity.User;
 import com.sparta.sixhundredbills.comment_like.entity.CommentLike;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

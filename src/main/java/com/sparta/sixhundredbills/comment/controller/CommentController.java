@@ -1,11 +1,8 @@
 package com.sparta.sixhundredbills.comment.controller;
 
-import com.sparta.sixhundredbills.auth.entity.User;
 import com.sparta.sixhundredbills.auth.security.UserDetailsImpl;
-import com.sparta.sixhundredbills.comment.dto.CommentDeleteResponseDto;
 import com.sparta.sixhundredbills.comment.dto.CommentRequestDto;
 import com.sparta.sixhundredbills.comment.dto.CommentResponseDto;
-import com.sparta.sixhundredbills.comment.entity.Comment;
 import com.sparta.sixhundredbills.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -77,6 +77,9 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter:3.12.4'
     testImplementation 'org.mockito:mockito-inline:4.11.0'
 
+    // Spring Security Test
+    testImplementation 'org.springframework.security:spring-security-test'
+
     // QueryDSL
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
     annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
